@@ -1,13 +1,13 @@
 {
   "rewrites": [
-    { "source": "/admin",      "destination": "/pages/admin.html" },
-    { "source": "/live",       "destination": "/pages/live.html" },
-    { "source": "/clips",      "destination": "/pages/clips.html" },
-    { "source": "/social",     "destination": "/pages/social.html" },
-    { "source": "/histoire",   "destination": "/pages/histoire.html" },
-    { "source": "/content",    "destination": "/pages/social-content.html" },
-    { "source": "/blackjack",  "destination": "/pages/blackjack.html" },
-    { "source": "/facolix",    "destination": "/pages/facolix.html" },
-    { "source": "/diplomatie", "destination": "/diplomatie.html" }
+    { "source": "/admin",       "destination": "/pages/admin.html" },
+    { "source": "/live",        "destination": "/pages/live.html" },
+    { "source": "/clips",       "destination": "/pages/clips.html" },
+    { "source": "/social",      "destination": "/pages/social.html" },
+    { "source": "/histoire",    "destination": "/pages/histoire.html" },
+    { "source": "/content",     "destination": "/pages/social-content.html" },
+    { "source": "/blackjack",   "destination": "/pages/blackjack.html" },
+    { "source": "/facolix",     "destination": "/pages/facolix.html" },
+    { "source": "/diplomatie",  "destination": "/pages/diplomatie.html" }
   ]
 }
