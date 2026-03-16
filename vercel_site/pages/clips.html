@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADGstream — Clips</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+<style>
+main { padding-top:100px; padding-bottom:80px; min-height:100vh; }
+.clips-header { max-width:1200px; margin:0 auto 40px; padding:0 5%; }
+.filter-bar { display:flex; gap:10px; margin-top:24px; flex-wrap:wrap; }
+.fbtn { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.25em; text-transform:uppercase; padding:8px 18px; border-radius:20px; border:1px solid rgba(124,58,237,.25); background:transparent; color:var(--muted); cursor:pointer; transition:all .2s; }
+.fbtn:hover,.fbtn.active { background:rgba(124,58,237,.15); border-color:rgba(124,58,237,.5); color:var(--v8); }
+.cgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; max-width:1200px; margin:0 auto; padding:0 5%; }
+.clip { border-radius:12px; overflow:hidden; background:rgba(10,0,20,.75); border:1px solid var(--border); transition:all .22s; cursor:pointer; }
+.clip:hover { transform:translateY(-5px); border-color:rgba(124,58,237,.45); box-shadow:0 16px 40px rgba(124,58,237,.12); }
+.cthumb { aspect-ratio:16/9; background:#080012; position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.ctg { position:absolute;inset:0;background-image:repeating-linear-gradient(45deg,rgba(124,58,237,.06) 0px,rgba(124,58,237,.06) 1px,transparent 1px,transparent 9px) }
+.csb { position:absolute;font-size:110px;color:rgba(124,58,237,.06);font-family:serif }
+.cplay { position:relative;z-index:1;width:46px;height:46px;border-radius:50%;background:rgba(124,58,237,.22);border:1px solid rgba(124,58,237,.5);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--v8);transition:all .2s;padding-left:3px }
+.clip:hover .cplay { background:rgba(124,58,237,.4);transform:scale(1.1) }
+.cbadge { position:absolute;top:10px;left:10px;z-index:2;font-family:'Cinzel',serif;font-size:8px;letter-spacing:.2em;text-transform:uppercase;padding:4px 10px;border-radius:4px;background:rgba(124,58,237,.5);border:1px solid rgba(124,58,237,.7);color:var(--v9) }
+.cinfo { padding:15px 16px }
+.cttl { font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--v9);margin-bottom:6px }
+.cmeta { font-size:11px;color:var(--muted);letter-spacing:.07em;display:flex;gap:12px }
+.empty { text-align:center; padding:80px 20px; color:var(--muted); font-size:16px; letter-spacing:.1em; }
+</style>
+</head>
+<body>
+<div id="bg"></div><div id="bgg"></div>
+
+<nav id="nav">
+  <a href="/" class="nlogo">ADGstream</a>
+  <ul class="nlinks">
+    <li><a href="/#about">À propos</a></li>
+    <li><a href="/#schedule">Schedule</a></li>
+    <li><a href="/live">Live</a></li>
+    <li><a href="/clips" class="active">Clips</a></li>
+    <li><a href="/social">Réseaux</a></li>
+  </ul>
+  <div class="nstatus"><div class="ldot" id="ldot"></div><span id="ltext">Offline</span></div>
+  <div class="burger" id="burger" onclick="toggleDrawer()"><span></span><span></span><span></span></div>
+</nav>
+<div class="drawer" id="drawer">
+  <a href="/#about">À propos</a>
+  <a href="/#schedule">Schedule</a>
+  <a href="/live">Live</a>
+  <a href="/clips">Clips</a>
+  <a href="/social">Réseaux</a>
+</div>
+
+<main>
+  <div class="clips-header">
+    <div class="seye">✦ Meilleurs moments</div>
+    <h1 class="sttl">Clips <em>&amp; Highlights</em></h1>
+    <div class="filter-bar">
+      <button class="fbtn active" onclick="filter('all',this)">Tous</button>
+      <button class="fbtn" onclick="filter('poker',this)">Poker</button>
+      <button class="fbtn" onclick="filter('magie',this)">Magie</button>
+      <button class="fbtn" onclick="filter('casino',this)">Casino</button>
+    </div>
+  </div>
+
+  <div class="cgrid" id="cgrid"></div>
+</main>
+
+<footer>
+  <div class="co tl"></div><div class="co tr"></div>
+  <div class="flogo">ADGstream</div>
+  <div class="ftag">La table est toujours ouverte</div>
+  <div class="fsuits">♠ ♥ ♦ ♣</div>
+  <div class="flinks">
+    <a href="https://twitch.tv/adgstream" target="_blank">Twitch</a>
+    <a href="https://discord.gg/kcRtUEnb" target="_blank">Discord</a>
+    <a href="https://tiktok.com/@adgstream" target="_blank">TikTok</a>
+  </div>
+  <div class="fcopy">© 2025 ADGstream</div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script>
+const CLIPS = [
+  { title:'Quinte flush royale — Le moment', views:'24K vues', date:'Il y a 2 jours', suit:'♠', cat:'poker', link:'https://twitch.tv/adgstream' },
+  { title:'Le tour de carte impossible', views:'18K vues', date:'Il y a 1 semaine', suit:'♥', cat:'magie', link:'https://twitch.tv/adgstream' },
+  { title:'All-in sur une paire — Résultat fou', views:'31K vues', date:'Il y a 2 semaines', suit:'♦', cat:'poker', link:'https://twitch.tv/adgstream' },
+  { title:'Magie en direct — Le chat n\'en croit pas ses yeux', views:'15K vues', date:'Il y a 3 semaines', suit:'♣', cat:'magie', link:'https://twitch.tv/adgstream' },
+  { title:'Blackjack — 5 cartes sans dépasser 21', views:'9K vues', date:'Il y a 1 mois', suit:'♠', cat:'casino', link:'https://twitch.tv/adgstream' },
+  { title:'Poker — Bluff parfait contre 4 joueurs', views:'22K vues', date:'Il y a 1 mois', suit:'♦', cat:'poker', link:'https://twitch.tv/adgstream' },
+];
+
+let current = 'all';
+
+function render(cat) {
+  const grid = document.getElementById('cgrid');
+  const list = cat === 'all' ? CLIPS : CLIPS.filter(c=>c.cat===cat);
+  if (!list.length) { grid.innerHTML='<div class="empty">Aucun clip dans cette catégorie</div>'; return; }
+  grid.innerHTML = list.map(c=>`
+    <a class="clip" href="${c.link}" target="_blank">
+      <div class="cthumb">
+        <div class="ctg"></div>
+        <div class="csb">${c.suit}</div>
+        <span class="cbadge">${c.cat}</span>
+        <div class="cplay">▶</div>
+      </div>
+      <div class="cinfo">
+        <div class="cttl">${c.title}</div>
+        <div class="cmeta"><span>${c.views}</span><span>${c.date}</span></div>
+      </div>
+    </a>`).join('');
+}
+
+function filter(cat, btn) {
+  current = cat;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render(cat);
+}
+
+render('all');
+</script>
+</body>
+</html>

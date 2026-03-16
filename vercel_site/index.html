@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADGstream</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="bg"></div>
+<div id="bgg"></div>
+
+<button id="theme-fab" onclick="toggleTheme()">🔥 Facolix</button>
+
+<nav id="nav">
+  <a href="/" class="nlogo">ADGstream</a>
+  <ul class="nlinks">
+    <li><a href="/#about">À propos</a></li>
+    <li><a href="/#schedule">Schedule</a></li>
+    <li><a href="/live">Live</a></li>
+    <li><a href="/clips">Clips</a></li>
+    <li><a href="/histoire">Histoire</a></li>
+    <li><a href="/content">Contenu</a></li>
+    <li><a href="/blackjack">Blackjack</a></li>
+    <li><a href="/facolix">Facolix 🔥</a></li>
+    <li><a href="/social">Réseaux</a></li>
+  </ul>
+  <div class="nstatus">
+    <div class="ldot" id="ldot"></div>
+    <span id="ltext">Offline</span>
+  </div>
+  <div class="burger" id="burger" onclick="toggleDrawer()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+<div class="drawer" id="drawer">
+  <a href="/#about" onclick="closeDrawer()">À propos</a>
+  <a href="/#schedule" onclick="closeDrawer()">Schedule</a>
+  <a href="/live" onclick="closeDrawer()">Live</a>
+  <a href="/clips" onclick="closeDrawer()">Clips</a>
+  <a href="/histoire" onclick="closeDrawer()">Histoire</a>
+  <a href="/content" onclick="closeDrawer()">Contenu</a>
+  <a href="/blackjack" onclick="closeDrawer()">Blackjack</a>
+  <a href="/facolix" onclick="closeDrawer()">Facolix 🔥</a>
+  <a href="/social" onclick="closeDrawer()">Réseaux</a>
+</div>
+
+<div id="livebanner">
+  <div class="lp"></div>
+  <span>ADGstream est en direct !</span>
+  <a href="/live">Regarder ♠</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hglow" style="width:700px;height:350px;top:30%;left:50%;transform:translate(-50%,-50%)"></div>
+  <div class="hglow" style="width:350px;height:350px;bottom:0;right:8%"></div>
+  <div class="hsuit">♠</div>
+  <div class="co tl"></div><div class="co tr"></div>
+  <div class="co bl"></div><div class="co br"></div>
+  <div class="grule" style="top:9%"></div>
+  <div class="grule" style="bottom:9%"></div>
+  <div class="hinner">
+    <div class="hbrow"><span id="hero_eyebrow">The House Always Streams</span></div>
+    <h1 class="hname" id="hero_name">ADGstream</h1>
+    <p class="htag" id="hero_tag">Streamer · Casino · Card Magic</p>
+    <div class="hbtns">
+      <a href="https://twitch.tv/adgstream" target="_blank" id="link-twitch" class="btn bv">♠ <span id="hero_btn_watch">Regarder sur Twitch</span></a>
+      <a href="#about" class="btn bo">Découvrir ↓</a>
+    </div>
+  </div>
+  <div class="fanwrap">
+    <div class="fc" style="transform:rotate(-22deg) translateX(-104px);animation:fD 6s ease-in-out infinite"><div class="fcb"></div><div class="fcc tl">A<br>♠</div><div class="fcc br">A<br>♠</div></div>
+    <div class="fc" style="transform:rotate(-13deg) translateX(-60px);animation:fD 7s ease-in-out infinite;animation-delay:.4s"><div class="fcb"></div><div class="fcc tl">K<br>♦</div><div class="fcc br">K<br>♦</div></div>
+    <div class="fc" style="transform:rotate(-5deg) translateX(-20px);z-index:2;animation:fU 5.5s ease-in-out infinite;animation-delay:.8s"><div class="fcb"></div><div class="fcc tl">Q<br>♥</div><div class="fcc br">Q<br>♥</div></div>
+    <div class="fc" style="transform:rotate(5deg) translateX(20px);animation:fU 6.5s ease-in-out infinite;animation-delay:.2s"><div class="fcb"></div><div class="fcc tl">J<br>♣</div><div class="fcc br">J<br>♣</div></div>
+    <div class="fc" style="transform:rotate(13deg) translateX(60px);animation:fD 7s ease-in-out infinite;animation-delay:.6s"><div class="fcb"></div><div class="fcc tl">10<br>♠</div><div class="fcc br">10<br>♠</div></div>
+    <div class="fc" style="transform:rotate(22deg) translateX(104px);animation:fD 6s ease-in-out infinite;animation-delay:1s"><div class="fcb"></div><div class="fcc tl">9<br>♦</div><div class="fcc br">9<br>♦</div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="inner2col">
+    <div>
+      <div class="seye">✦ À propos</div>
+      <h2 class="sttl" id="about_title">La magie des cartes,<br><em>en live</em></h2>
+      <p class="ap" id="about_p1">Bienvenue sur ma chaîne…</p>
+      <p class="ap" id="about_p2">Je stream du poker…</p>
+      <div class="stats">
+        <div class="stat"><div class="sn" id="stat1_num">263</div><div class="sl" id="stat1_lbl">Followers</div></div>
+        <div class="stat"><div class="sn" id="stat2_num">5×</div><div class="sl" id="stat2_lbl">Par semaine</div></div>
+        <div class="stat"><div class="sn" id="stat3_num">4 mois</div><div class="sl" id="stat3_lbl">En stream</div></div>
+      </div>
+    </div>
+    <div class="avis">
+      <div class="aring" style="width:290px;height:290px;border-color:rgba(124,58,237,.1);animation:sR 32s linear infinite"></div>
+      <div class="aring" style="width:220px;height:220px;border-color:rgba(124,58,237,.16);animation:sRR 22s linear infinite"></div>
+      <div class="aring" style="width:160px;height:160px;border-color:rgba(124,58,237,.09)"></div>
+      <div class="acard" style="width:65px;height:91px;top:16px;left:50%;margin-left:-33px;transform:rotate(-9deg);animation:fU 6s ease-in-out infinite">♠</div>
+      <div class="acard" style="width:60px;height:84px;bottom:16px;right:38px;transform:rotate(6deg);animation:fD 7s ease-in-out infinite;animation-delay:1s">♥</div>
+      <div class="acard" style="width:56px;height:78px;top:50%;left:10px;margin-top:-48px;transform:rotate(-11deg);animation:fD 8s ease-in-out infinite;animation-delay:.5s">♦</div>
+      <div class="acard" style="width:56px;height:78px;top:50%;right:10px;margin-top:-48px;transform:rotate(10deg);animation:fU 7s ease-in-out infinite;animation-delay:1.5s">♣</div>
+      <div class="acenter"><div class="acb"></div>♠</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="schedule" style="background:rgba(6,0,14,.55);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="swrap">
+    <div class="shead">
+      <div>
+        <div class="seye">✦ Horaires</div>
+        <h2 class="sttl">Planning <em>des streams</em></h2>
+      </div>
+      <div class="wbadge">Semaine du <span id="schedule_week">—</span></div>
+    </div>
+    <div id="dayrows"></div>
+  </div>
+</section>
+
+<!-- KO-FI -->
+<div class="kofi-section">
+  <a href="https://ko-fi.com/adgstream" target="_blank" class="kofi-btn kofi-link">
+    ♦ Soutenir le stream
+  </a>
+  <p style="margin-top:12px;font-size:12px;color:var(--muted);letter-spacing:.15em;font-style:italic">Un café = du carburant pour la prochaine session ✦</p>
+</div>
+
+<!-- FACOLIX SECTION -->
+<section id="facolix-section">
+  <div class="facolix-inner">
+    <div>
+      <div class="facolix-live-badge">
+        <div class="facolix-ldot" id="facolix-ldot"></div>
+        <span id="facolix-live-text">Facolix</span>
+      </div>
+      <div class="facolix-name">Facolix</div>
+      <div class="facolix-sub">Co-streamer · Partenaire · Ami</div>
+      <p id="facolix-about" style="font-size:16px;font-weight:300;line-height:1.85;color:rgba(233,213,255,.72);letter-spacing:.03em;margin-bottom:24px">Mon co-streamer et partenaire de jeu…</p>
+      <a href="https://www.twitch.tv/facolix" target="_blank" id="facolix-link-twitch" class="btn-facolix">♠ Regarder Facolix</a>
+    </div>
+    <div class="facolix-player-wrap" id="facolix-player-box"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="text-align:center;padding:80px 5%">
+  <div class="seye" style="justify-content:center">✦ En direct</div>
+  <h2 class="sttl" style="text-align:center;margin-bottom:28px">Rejoins la <em>table</em></h2>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+    <a href="/live" class="btn bv">♠ Voir le stream live</a>
+    <a href="https://discord.gg/kcRtUEnb" target="_blank" id="link-discord" class="btn bo">♣ Discord</a>
+  </div>
+</section>
+
+<footer>
+  <div class="co tl"></div><div class="co tr"></div>
+  <div class="flogo">ADGstream</div>
+  <div class="ftag" id="footer_tag">La table est toujours ouverte</div>
+  <div class="fsuits">♠ ♥ ♦ ♣</div>
+  <div class="flinks">
+    <a href="https://twitch.tv/adgstream" target="_blank" id="link-twitch-ft">Twitch</a>
+    <a href="https://discord.gg/kcRtUEnb" target="_blank" id="link-discord-ft">Discord</a>
+    <a href="https://tiktok.com/@adgstream" target="_blank" id="link-tiktok-ft">TikTok</a>
+    <a href="https://ko-fi.com/adgstream" target="_blank" class="kofi-link" id="link-kofi-ft" style="color:rgba(212,175,55,.5)">Ko-fi ♦</a>
+  </div>
+  <div class="fcopy">© 2025 ADGstream — Tous droits réservés</div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  injectTwitchPlayer('facolix', 'facolix-player-box');
+});
+</script>
+</body>
+</html>

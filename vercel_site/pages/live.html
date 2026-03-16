@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADGstream — Live</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+<style>
+#live-main { padding-top:88px; min-height:100vh; padding-bottom:60px; }
+.live-grid { display:grid; grid-template-columns:1fr 320px; gap:20px; max-width:1300px; margin:0 auto; padding:0 4%; }
+.player-wrap { border-radius:12px; overflow:hidden; border:1px solid rgba(124,58,237,.3); box-shadow:0 0 40px rgba(124,58,237,.1); aspect-ratio:16/9; background:#09001a; position:relative; }
+.player-wrap iframe { position:absolute; inset:0; width:100%; height:100%; border:none; }
+.chat-wrap { border-radius:12px; overflow:hidden; border:1px solid rgba(124,58,237,.25); background:rgba(8,0,18,.85); display:flex; flex-direction:column; height:600px; }
+.chat-head { padding:12px 16px; border-bottom:1px solid rgba(124,58,237,.15); display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.chat-head span { font-family:'Cinzel',serif; font-size:9px; letter-spacing:.35em; color:var(--muted); text-transform:uppercase; }
+.chat-wrap iframe { flex:1; border:none; background:transparent; }
+.live-info { max-width:1300px; margin:24px auto 0; padding:0 4%; display:flex; gap:16px; flex-wrap:wrap; }
+.info-card { background:rgba(10,0,22,.8); border:1px solid rgba(124,58,237,.2); border-radius:10px; padding:16px 20px; flex:1; min-width:180px; }
+.info-lbl { font-family:'Cinzel',serif; font-size:8px; letter-spacing:.4em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.info-val { font-family:'Cinzel',serif; font-size:18px; font-weight:700; color:var(--v9); }
+.dside-links { display:flex; flex-direction:column; gap:10px; margin-top:12px; }
+.dsl { display:flex; align-items:center; gap:10px; padding:13px 16px; border-radius:9px; text-decoration:none; border:1px solid rgba(124,58,237,.2); background:rgba(10,0,22,.7); transition:all .2s; }
+.dsl:hover { border-color:rgba(124,58,237,.5); background:rgba(124,58,237,.1); transform:translateX(3px); }
+.dsl-ico { font-size:18px; width:28px; text-align:center; }
+.dsl-plat { font-family:'Cinzel',serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--v9); }
+.dsl-hdl  { font-size:11px; color:var(--muted); margin-top:1px; }
+.dsl-arr  { color:rgba(124,58,237,.35); margin-left:auto; }
+/* Discord widget box */
+.disc-box { border-radius:12px; overflow:hidden; border:1px solid rgba(124,58,237,.22); background:rgba(8,0,18,.85); margin-top:12px; }
+.disc-head { padding:11px 15px; border-bottom:1px solid rgba(124,58,237,.14); font-family:'Cinzel',serif; font-size:9px; letter-spacing:.35em; color:var(--muted); text-transform:uppercase; }
+.disc-fall { padding:16px; }
+.disc-sname { font-family:'Cinzel',serif; font-size:13px; font-weight:700; color:var(--v9); margin-bottom:4px; }
+.disc-mem   { font-size:12px; color:var(--muted); letter-spacing:.07em; margin-bottom:12px; }
+.disc-inv   { display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border-radius:7px; background:rgba(88,101,242,.18); border:1px solid rgba(88,101,242,.38); color:#7289da; font-family:'Cinzel',serif; font-size:10px; letter-spacing:.2em; text-decoration:none; text-transform:uppercase; transition:all .2s; }
+.disc-inv:hover { background:rgba(88,101,242,.28); }
+.disc-setup { margin-top:10px; padding:10px; background:rgba(124,58,237,.06); border:1px dashed rgba(124,58,237,.22); border-radius:6px; }
+.disc-setup p { font-size:10px; color:rgba(192,132,252,.5); line-height:1.7; margin-bottom:8px; letter-spacing:.06em; }
+.disc-row  { display:flex; gap:6px; }
+.disc-inp  { flex:1; background:rgba(0,0,0,.3); border:1px solid rgba(124,58,237,.3); border-radius:5px; padding:7px 10px; color:var(--v9); font-size:11px; outline:none; font-family:monospace; }
+.disc-inp:focus { border-color:var(--v7); }
+.disc-btn  { background:var(--v6); border:none; border-radius:5px; padding:7px 12px; color:#fff; font-family:'Cinzel',serif; font-size:9px; letter-spacing:.2em; cursor:pointer; transition:background .2s; }
+.disc-btn:hover { background:var(--v7); }
+@media(max-width:900px){ .live-grid{grid-template-columns:1fr} .chat-wrap{height:400px} }
+</style>
+</head>
+<body>
+<div id="bg"></div><div id="bgg"></div>
+
+<nav id="nav">
+  <a href="/" class="nlogo">ADGstream</a>
+  <ul class="nlinks">
+    <li><a href="/#about">À propos</a></li>
+    <li><a href="/#schedule">Schedule</a></li>
+    <li><a href="/live" class="active">Live</a></li>
+    <li><a href="/clips">Clips</a></li>
+    <li><a href="/social">Réseaux</a></li>
+  </ul>
+  <div class="nstatus"><div class="ldot" id="ldot"></div><span id="ltext">Offline</span></div>
+  <div class="burger" id="burger" onclick="toggleDrawer()"><span></span><span></span><span></span></div>
+</nav>
+<div class="drawer" id="drawer">
+  <a href="/#about">À propos</a>
+  <a href="/#schedule">Schedule</a>
+  <a href="/live">Live</a>
+  <a href="/clips">Clips</a>
+  <a href="/social">Réseaux</a>
+</div>
+
+<main id="live-main">
+  <div style="max-width:1300px;margin:0 auto;padding:0 4% 24px">
+    <div class="seye">✦ Stream en direct</div>
+    <h1 class="sttl">ADGstream — <em>Live</em></h1>
+  </div>
+
+  <div class="live-grid">
+    <!-- Player -->
+    <div class="player-wrap" id="tbox">
+      <div id="tph" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px">
+        <div style="font-size:70px;color:rgba(124,58,237,.1)">♠</div>
+        <p style="font-family:'Cinzel',serif;font-size:10px;letter-spacing:.3em;color:rgba(124,58,237,.35);text-transform:uppercase">Chargement du player…</p>
+      </div>
+    </div>
+
+    <!-- Right sidebar -->
+    <div>
+      <!-- Chat -->
+      <div class="chat-wrap">
+        <div class="chat-head"><span>✦ Chat Twitch</span></div>
+        <iframe id="chat-iframe" src="" allow="autoplay; fullscreen"></iframe>
+      </div>
+
+      <!-- Discord -->
+      <div class="disc-box">
+        <div class="disc-head">♣ Discord — Facolix &amp; ADG</div>
+        <div id="dwrap">
+          <div class="disc-fall">
+            <div class="disc-sname">Facolix &amp; ADG</div>
+            <div class="disc-mem">Serveur communautaire</div>
+            <a href="https://discord.gg/kcRtUEnb" target="_blank" class="disc-inv">♣ Rejoindre</a>
+            <div class="disc-setup">
+              <p>Pour le widget membres :<br>
+              Serveur Discord → Paramètres → Widget → Activer<br>Puis coller l'ID ici ↓</p>
+              <div class="disc-row">
+                <input id="gidinput" class="disc-inp" type="text" placeholder="ID serveur Discord…" onkeydown="if(event.key==='Enter')setGid()">
+                <button class="disc-btn" onclick="setGid()">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="dside-links">
+        <a href="https://twitch.tv/adgstream" target="_blank" class="dsl">
+          <span class="dsl-ico">♠</span>
+          <div><div class="dsl-plat">Twitch</div><div class="dsl-hdl">twitch.tv/adgstream</div></div>
+          <span class="dsl-arr">→</span>
+        </a>
+        <a href="https://discord.gg/kcRtUEnb" target="_blank" class="dsl">
+          <span class="dsl-ico">♣</span>
+          <div><div class="dsl-plat">Discord</div><div class="dsl-hdl">discord.gg/kcRtUEnb</div></div>
+          <span class="dsl-arr">→</span>
+        </a>
+        <a href="https://tiktok.com/@adgstream" target="_blank" class="dsl">
+          <span class="dsl-ico">♦</span>
+          <div><div class="dsl-plat">TikTok</div><div class="dsl-hdl">@adgstream</div></div>
+          <span class="dsl-arr">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="co tl"></div><div class="co tr"></div>
+  <div class="flogo">ADGstream</div>
+  <div class="ftag">La table est toujours ouverte</div>
+  <div class="fsuits">♠ ♥ ♦ ♣</div>
+  <div class="flinks">
+    <a href="https://twitch.tv/adgstream" target="_blank">Twitch</a>
+    <a href="https://discord.gg/kcRtUEnb" target="_blank">Discord</a>
+    <a href="https://tiktok.com/@adgstream" target="_blank">TikTok</a>
+  </div>
+  <div class="fcopy">© 2025 ADGstream</div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script>
+// Inject player + chat with correct parent
+const host = location.hostname || 'localhost';
+const parents = [...new Set(['localhost','127.0.0.1',host])];
+const pp = parents.map(p=>`parent=${encodeURIComponent(p)}`).join('&');
+
+// Player
+const box = document.getElementById('tbox');
+const ph  = document.getElementById('tph');
+const pf  = document.createElement('iframe');
+pf.src = `https://player.twitch.tv/?channel=adgstream&${pp}&autoplay=false`;
+pf.allowFullscreen = true; pf.allow = 'autoplay;fullscreen';
+pf.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:none';
+ph.style.display = 'none';
+box.appendChild(pf);
+
+// Chat
+const cf = document.getElementById('chat-iframe');
+cf.src = `https://www.twitch.tv/embed/adgstream/chat?${pp}&darkpopout&migration=true`;
+
+// Discord widget
+const gid = localStorage.getItem('adg_gid');
+if(gid){ document.getElementById('gidinput').value=gid; applyGid(gid); }
+
+function setGid(){
+  const id = document.getElementById('gidinput').value.trim();
+  if(!id||!/^\d+$/.test(id)){ alert('ID invalide — chiffres uniquement'); return; }
+  localStorage.setItem('adg_gid',id); applyGid(id);
+}
+function applyGid(id){
+  document.getElementById('dwrap').innerHTML=
+    `<iframe src="https://discord.com/widget?id=${id}&theme=dark" width="100%" height="300" style="border:none;display:block" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>`;
+}
+</script>
+</body>
+</html>

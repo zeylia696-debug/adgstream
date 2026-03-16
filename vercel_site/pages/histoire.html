@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADGstream — Histoire</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="bg"></div><div id="bgg"></div>
+<button id="theme-fab" onclick="toggleTheme()">🔥 Facolix</button>
+<nav id="nav">
+  <a href="/" class="nlogo">ADGstream</a>
+  <ul class="nlinks">
+    <li><a href="/#about">À propos</a></li><li><a href="/#schedule">Schedule</a></li>
+    <li><a href="/live">Live</a></li><li><a href="/clips">Clips</a></li>
+    <li><a href="/histoire" class="active">Histoire</a></li>
+    <li><a href="/content">Contenu</a></li><li><a href="/blackjack">Blackjack</a></li>
+    <li><a href="/facolix">Facolix 🔥</a></li><li><a href="/social">Réseaux</a></li>
+  </ul>
+  <div class="nstatus"><div class="ldot" id="ldot"></div><span id="ltext">Offline</span></div>
+  <div class="burger" id="burger" onclick="toggleDrawer()"><span></span><span></span><span></span></div>
+</nav>
+<div class="drawer" id="drawer">
+  <a href="/#about">À propos</a><a href="/#schedule">Schedule</a><a href="/live">Live</a>
+  <a href="/clips">Clips</a><a href="/histoire">Histoire</a><a href="/content">Contenu</a>
+  <a href="/blackjack">Blackjack</a><a href="/facolix">Facolix 🔥</a><a href="/social">Réseaux</a>
+</div>
+<div id="livebanner"><div class="lp"></div><span>ADGstream est en direct !</span><a href="/live">Regarder ♠</a></div>
+
+<section style="padding-top:120px;border-top:1px solid var(--border)">
+  <div style="max-width:1200px;margin:0 auto;padding:0 5%">
+    <div class="seye">✦ Lore</div>
+    <h1 class="sttl">Histoire & <em>Personnages</em></h1>
+  </div>
+</section>
+
+<!-- CHARACTERS -->
+<section style="padding-top:20px">
+  <div style="max-width:1200px;margin:0 auto;padding:0 5%;margin-bottom:20px">
+    <div class="seye">✦ Personnages</div>
+    <h2 class="sttl" style="font-size:clamp(20px,3vw,32px)">Les joueurs de la <em>table</em></h2>
+  </div>
+  <div class="chars-grid" id="chars-grid">
+    <!-- Populated by JS -->
+  </div>
+</section>
+
+<!-- STORY OF THE WEEK -->
+<section style="border-top:1px solid var(--border)">
+  <div class="story-section">
+    <div class="seye" style="justify-content:center">✦ Histoire de la semaine</div>
+    <div class="story-ornament">♠ ♥ ♦ ♣</div>
+    <div class="story-card">
+      <div class="story-chapter" id="story-chapter">Chapitre 1 — La Première Mise</div>
+      <div class="story-date" id="story-date">Semaine du —</div>
+      <div class="story-body" id="story-body">La salle était plongée dans une semi-obscurité violette…</div>
+      <div class="story-teaser" id="story-teaser">La suite au prochain stream… ♠</div>
+    </div>
+    <div class="story-ornament" style="margin-top:30px">♦ ✦ ♦</div>
+  </div>
+</section>
+
+<footer>
+  <div class="co tl"></div><div class="co tr"></div>
+  <div class="flogo">ADGstream</div>
+  <div class="ftag" id="footer_tag">La table est toujours ouverte</div>
+  <div class="fsuits">♠ ♥ ♦ ♣</div>
+  <div class="flinks">
+    <a href="https://twitch.tv/adgstream" target="_blank">Twitch</a>
+    <a href="https://discord.gg/kcRtUEnb" target="_blank">Discord</a>
+    <a href="https://ko-fi.com/adgstream" target="_blank" class="kofi-link" style="color:rgba(212,175,55,.5)">Ko-fi ♦</a>
+  </div>
+  <div class="fcopy">© 2025 ADGstream</div>
+</footer>
+<script src="/js/main.js"></script>
+</body>
+</html>

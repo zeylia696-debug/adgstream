@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Facolix — Co-streamer</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body class="page-facolix">
+<div id="bg"></div><div id="bgg"></div>
+<button id="theme-fab" onclick="toggleTheme()" style="background:rgba(180,83,9,.2);border-color:rgba(245,158,11,.4);color:#fcd34d">♠ ADGstream</button>
+
+<nav id="nav">
+  <a href="/facolix" class="nlogo">Facolix</a>
+  <ul class="nlinks">
+    <li><a href="/">ADGstream</a></li>
+    <li><a href="/live">Live ADG</a></li>
+    <li><a href="/clips">Clips ADG</a></li>
+    <li><a href="/histoire">Histoire</a></li>
+    <li><a href="/content">Contenu</a></li>
+    <li><a href="/blackjack">Blackjack</a></li>
+    <li><a href="/facolix" class="active">Facolix 🔥</a></li>
+    <li><a href="/social">Réseaux</a></li>
+  </ul>
+  <div class="nstatus"><div class="ldot" id="ldot"></div><span id="ltext">Offline</span></div>
+  <div class="burger" id="burger" onclick="toggleDrawer()"><span></span><span></span><span></span></div>
+</nav>
+<div class="drawer" id="drawer">
+  <a href="/">ADGstream</a><a href="/live">Live ADG</a><a href="/histoire">Histoire</a>
+  <a href="/blackjack">Blackjack</a><a href="/facolix">Facolix 🔥</a><a href="/social">Réseaux</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hglow" style="width:700px;height:350px;top:30%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(180,83,9,.25) 0%,transparent 70%)"></div>
+  <div class="hsuit" style="color:rgba(217,119,6,.04)">🔥</div>
+  <div class="co tl"></div><div class="co tr"></div>
+  <div class="co bl"></div><div class="co br"></div>
+  <div class="grule" style="top:9%"></div>
+  <div class="grule" style="bottom:9%"></div>
+  <div class="hinner">
+    <div class="hbrow" style="color:#fcd34d"><span>Co-streamer · Partenaire · Ami</span></div>
+    <h1 class="hname">Facolix</h1>
+    <p class="htag" style="color:#fcd34d">Streamer · Gaming · Casino</p>
+    <div class="hbtns">
+      <a href="https://www.twitch.tv/facolix" target="_blank" id="facolix-link-twitch" class="btn-facolix" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase">🔥 Regarder Facolix</a>
+      <a href="/" class="btn bo" style="border-color:rgba(245,158,11,.4);color:#fcd34d">♠ Retour ADGstream</a>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE + PLAYER -->
+<section id="about" style="border-top:1px solid rgba(217,119,6,.25)">
+  <div class="inner2col">
+    <div>
+      <div class="seye" style="color:#f59e0b">✦ En ce moment</div>
+      <h2 class="sttl">Stream <em>en direct</em></h2>
+      <div style="display:inline-flex;align-items:center;gap:7px;margin-bottom:16px;font-family:'Cinzel',serif;font-size:9px;letter-spacing:.3em;text-transform:uppercase;background:rgba(30,10,0,.6);border:1px solid rgba(217,119,6,.3);border-radius:20px;padding:7px 14px;color:#fcd34d">
+        <div class="facolix-ldot" id="facolix-ldot"></div>
+        <span id="facolix-live-text">Vérification…</span>
+      </div>
+      <p id="facolix-about" style="font-size:17px;font-weight:300;line-height:1.85;color:rgba(254,243,199,.7);letter-spacing:.03em;margin-bottom:24px">Bio de Facolix…</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <a href="https://www.twitch.tv/facolix" target="_blank" id="facolix-link-twitch2" class="btn-facolix" style="font-family:'Cinzel',serif;font-size:11px;letter-spacing:.26em;text-transform:uppercase">🔥 Regarder</a>
+        <a href="https://discord.gg/kcRtUEnb" target="_blank" id="facolix-link-discord" class="btn bo" style="border-color:rgba(245,158,11,.4);color:#fcd34d">♣ Discord</a>
+      </div>
+    </div>
+    <div class="facolix-player-wrap" id="facolix-player-box"></div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="schedule" style="background:rgba(20,8,0,.55);border-top:1px solid rgba(217,119,6,.2);border-bottom:1px solid rgba(217,119,6,.2)">
+  <div class="swrap">
+    <div class="shead">
+      <div>
+        <div class="seye" style="color:#f59e0b">✦ Horaires</div>
+        <h2 class="sttl">Planning <em>Facolix</em></h2>
+      </div>
+    </div>
+    <div id="facolix-dayrows"></div>
+  </div>
+</section>
+
+<!-- CLIPS -->
+<section>
+  <div style="max-width:1200px;margin:0 auto;padding:0 5%">
+    <div class="seye" style="color:#f59e0b">✦ Clips</div>
+    <h2 class="sttl">Meilleurs <em>moments</em></h2>
+  </div>
+  <div class="cgrid" id="cgrid"></div>
+</section>
+
+<footer style="border-top:1px solid rgba(217,119,6,.2)">
+  <div class="flogo" style="background:linear-gradient(135deg,#fef3c7,#fcd34d,#d97706);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Facolix</div>
+  <div class="ftag" style="color:rgba(252,211,77,.4)">Le feu ne s'éteint jamais</div>
+  <div class="fsuits" style="color:rgba(217,119,6,.3)">♠ ♥ ♦ ♣</div>
+  <div class="flinks">
+    <a href="https://www.twitch.tv/facolix" target="_blank" style="color:rgba(217,119,6,.5)">Twitch Facolix</a>
+    <a href="/" style="color:rgba(124,58,237,.5)">ADGstream</a>
+    <a href="https://ko-fi.com/adgstream" target="_blank" class="kofi-link" style="color:rgba(212,175,55,.5)">Ko-fi ♦</a>
+  </div>
+  <div class="fcopy" style="color:rgba(217,119,6,.25)">© 2025 ADGstream & Facolix</div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  injectTwitchPlayer('facolix', 'facolix-player-box');
+  checkFacolixLive();
+  setInterval(checkFacolixLive, 60000);
+  // Load Facolix clips
+  loadTwitchStats('facolix').then(stats => {
+    if (stats?.clips?.length) renderClipsFromAPI(stats.clips, {});
+  });
+  // Load Facolix schedule from content
+  fetch('/api/content').then(r=>r.json()).then(d => {
+    if (d.facolix?.schedule_days) renderSchedule(d.facolix.schedule_days, 'facolix-dayrows');
+    if (d.facolix?.about) setText('facolix-about', d.facolix.about);
+    if (d.facolix?.social_links) {
+      const sl = d.facolix.social_links;
+      setHref('facolix-link-twitch', sl.twitch||'https://www.twitch.tv/facolix');
+      setHref('facolix-link-twitch2', sl.twitch||'https://www.twitch.tv/facolix');
+      setHref('facolix-link-discord', sl.discord||'https://discord.gg/kcRtUEnb');
+    }
+    setText('footer_tag', d.footer_tag);
+    checkLive(d.twitch_channel);
+  });
+});
+</script>
+</body>
+</html>

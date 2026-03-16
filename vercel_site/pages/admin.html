@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADGstream — Admin</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04000b;--panel:#0d0020;--card:#140028;--border:rgba(124,58,237,.2);--borderh:rgba(124,58,237,.5);
+  --v6:#7c3aed;--v7:#a855f7;--v8:#c084fc;--v9:#e9d5ff;--muted:rgba(192,132,252,.5);
+  --white:#f5f0ff;--green:#22c55e;--red:#ef4444;--yellow:#eab308;
+  --input-bg:rgba(0,0,0,.35);--input-border:rgba(124,58,237,.25);
+}
+html,body{height:100%;background:var(--bg);color:var(--white);font-family:'Raleway',sans-serif}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--v6);border-radius:2px}
+
+/* ── LOGIN SCREEN ── */
+#login-screen{
+  position:fixed;inset:0;z-index:999;
+  background:radial-gradient(ellipse at 50% 30%,rgba(88,28,135,.3) 0%,transparent 60%),#04000b;
+  display:flex;align-items:center;justify-content:center;
+}
+.login-box{
+  width:100%;max-width:400px;padding:48px 40px;
+  background:var(--panel);border:1px solid var(--border);border-radius:16px;
+  box-shadow:0 0 60px rgba(124,58,237,.15);text-align:center;
+}
+.login-logo{font-family:'Cinzel Decorative',serif;font-size:28px;font-weight:700;background:linear-gradient(135deg,var(--v9),var(--v8),var(--v6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.login-sub{font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;margin-bottom:36px}
+.login-field{margin-bottom:16px;text-align:left}
+.login-field label{display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;font-family:'Cinzel',serif}
+.login-field input{width:100%;background:var(--input-bg);border:1px solid var(--input-border);border-radius:7px;padding:12px 14px;color:var(--white);font-family:'Raleway',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+.login-field input:focus{border-color:var(--v7)}
+.login-btn{width:100%;padding:13px;background:var(--v6);border:none;border-radius:7px;color:#fff;font-family:'Cinzel',serif;font-size:11px;letter-spacing:.28em;text-transform:uppercase;cursor:pointer;transition:background .2s;margin-top:8px}
+.login-btn:hover{background:var(--v7)}
+.login-err{font-size:12px;color:var(--red);margin-top:12px;min-height:18px;letter-spacing:.06em}
+.login-suits{font-size:22px;color:rgba(124,58,237,.2);letter-spacing:12px;margin-bottom:28px}
+
+/* ── APP SHELL ── */
+#app{display:none;height:100vh;grid-template-columns:260px 1fr;grid-template-rows:54px 1fr}
+#app.show{display:grid}
+
+/* ── TOP BAR ── */
+#topbar{
+  grid-column:1/-1;
+  background:rgba(8,0,18,.98);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 20px;
+  backdrop-filter:blur(12px);
+}
+.tb-left{display:flex;align-items:center;gap:14px}
+.tb-logo{font-family:'Cinzel Decorative',serif;font-size:15px;font-weight:700;background:linear-gradient(135deg,var(--v9),var(--v8));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+.tb-badge{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.3em;text-transform:uppercase;padding:4px 10px;border-radius:4px;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:var(--v8)}
+.tb-right{display:flex;align-items:center;gap:10px}
+.tb-status{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.12em;color:var(--muted)}
+.tb-dot{width:7px;height:7px;border-radius:50%;background:rgba(124,58,237,.3)}
+.tb-dot.on{background:var(--v7);box-shadow:0 0 6px var(--v7)}
+.tb-btn{font-family:'Cinzel',serif;font-size:8px;letter-spacing:.22em;text-transform:uppercase;padding:7px 14px;border-radius:5px;border:1px solid var(--border);cursor:pointer;background:transparent;color:var(--v8);transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.tb-btn:hover{background:rgba(124,58,237,.12);border-color:var(--v7)}
+.tb-btn.danger{border-color:rgba(239,68,68,.3);color:rgba(239,68,68,.8)}
+.tb-btn.danger:hover{background:rgba(239,68,68,.1);border-color:var(--red)}
+
+/* ── SIDEBAR ── */
+#sidebar{background:var(--panel);border-right:1px solid var(--border);overflow-y:auto;padding:16px 0}
+#sidebar::-webkit-scrollbar{width:3px}
+.sb-section{padding:6px 14px 2px;font-family:'Cinzel',serif;font-size:8px;letter-spacing:.4em;text-transform:uppercase;color:rgba(124,58,237,.35);margin-top:12px}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;transition:all .18s;border-left:2px solid transparent;color:var(--muted);font-size:13px;letter-spacing:.04em;user-select:none}
+.sb-link:hover{background:rgba(124,58,237,.07);color:var(--v9)}
+.sb-link.active{background:rgba(124,58,237,.12);border-left-color:var(--v6);color:var(--v9)}
+.sb-link .ico{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.sb-save-badge{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--yellow);display:none}
+.sb-save-badge.show{display:block}
+
+/* ── CONTENT AREA ── */
+#content{overflow-y:auto;background:rgba(4,0,10,.5)}
+.pane{display:none;padding:28px 32px;max-width:900px}
+.pane.active{display:block}
+.pane-title{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;display:flex;align-items:center;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.pane-title::before{content:attr(data-ico);font-size:18px}
+
+/* ── FORM ELEMENTS ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-row.single{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.field label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);font-family:'Cinzel',serif}
+.field input,.field textarea,.field select{background:var(--input-bg);border:1px solid var(--input-border);border-radius:7px;padding:10px 12px;color:var(--white);font-family:'Raleway',sans-serif;font-size:13px;outline:none;transition:border-color .2s;width:100%}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--v7)}
+.field textarea{resize:vertical;min-height:80px;line-height:1.6}
+.field select{cursor:pointer}
+.field select option{background:#1a0030}
+
+/* ── TOGGLE ── */
+.toggle-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding:10px 14px;background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.1);border-radius:8px}
+.toggle-lbl{flex:1;font-size:13px;letter-spacing:.04em}
+.toggle-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.tog{position:relative;width:38px;height:22px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-track{position:absolute;inset:0;border-radius:11px;background:rgba(255,255,255,.1);border:1px solid rgba(124,58,237,.25);transition:background .2s}
+.tog input:checked+.tog-track{background:var(--v6);border-color:var(--v6)}
+.tog-knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .2s;pointer-events:none}
+.tog input:checked~.tog-knob{transform:translateX(16px)}
+
+/* ── SCHEDULE EDITOR ── */
+.day-edit-row{display:grid;grid-template-columns:42px 70px 1fr 1fr auto;gap:8px;align-items:center;padding:10px 12px;background:rgba(10,0,22,.6);border:1px solid var(--border);border-radius:8px;margin-bottom:6px;transition:border-color .2s}
+.day-edit-row:hover{border-color:rgba(124,58,237,.35)}
+.day-edit-row.offline-row{opacity:.6}
+.day-lbl{font-family:'Cinzel',serif;font-size:12px;font-weight:700;color:var(--v8);text-align:center}
+.day-num-in{width:100%;background:var(--input-bg);border:1px solid var(--input-border);border-radius:5px;padding:6px 8px;color:var(--white);font-size:12px;font-family:'Cinzel',serif;font-weight:700;text-align:center;outline:none}
+.day-act-in,.day-time-in{width:100%;background:var(--input-bg);border:1px solid var(--input-border);border-radius:5px;padding:7px 10px;color:var(--white);font-size:12px;font-family:'Raleway',sans-serif;outline:none}
+.day-act-in:focus,.day-time-in:focus,.day-num-in:focus{border-color:var(--v7)}
+
+/* ── CLIPS EDITOR ── */
+.clip-edit-row{padding:14px;background:rgba(10,0,22,.6);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;position:relative}
+.clip-edit-row:hover{border-color:rgba(124,58,237,.35)}
+.clip-edit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+.clip-edit-title{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.clip-del{position:absolute;top:10px;right:10px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);border-radius:5px;padding:4px 10px;color:rgba(239,68,68,.8);font-size:10px;letter-spacing:.15em;cursor:pointer;font-family:'Cinzel',serif;text-transform:uppercase;transition:all .2s}
+.clip-del:hover{background:rgba(239,68,68,.25)}
+.add-clip-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border:1px dashed rgba(124,58,237,.3);border-radius:8px;background:transparent;color:var(--muted);font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:4px}
+.add-clip-btn:hover{border-color:var(--v6);color:var(--v8);background:rgba(124,58,237,.06)}
+
+/* ── SAVE BUTTON ── */
+.save-bar{position:sticky;bottom:0;padding:14px 0;background:linear-gradient(0deg,rgba(4,0,11,.95) 80%,transparent);display:flex;align-items:center;gap:12px;margin-top:24px}
+.save-btn{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.28em;text-transform:uppercase;padding:12px 28px;border-radius:7px;border:none;background:var(--v6);color:#fff;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+.save-btn:hover{background:var(--v7);transform:translateY(-1px)}
+.save-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.save-status{font-size:12px;letter-spacing:.08em;color:var(--muted);opacity:0;transition:opacity .3s}
+.save-status.show{opacity:1}
+.save-status.ok{color:var(--green)}.save-status.err{color:var(--red)}
+
+/* ── SECTION CARD ── */
+.s-card{background:rgba(10,0,22,.5);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:20px}
+.s-card-title{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:rgba(124,58,237,.6);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.s-card-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── PASSWORD SECTION ── */
+.pwd-row{display:flex;gap:10px;align-items:flex-end}
+.pwd-row .field{flex:1;margin-bottom:0}
+.pwd-btn{font-family:'Cinzel',serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;padding:10px 18px;border-radius:7px;border:none;background:var(--v6);color:#fff;cursor:pointer;transition:background .2s;flex-shrink:0}
+.pwd-btn:hover{background:var(--v7)}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:rgba(10,0,22,.97);border:1px solid rgba(124,58,237,.4);border-radius:8px;padding:12px 20px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:.18em;color:var(--v8);opacity:0;transform:translateY(12px);transition:all .25s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.ok{border-color:rgba(34,197,94,.4);color:var(--green)}
+#toast.err{border-color:rgba(239,68,68,.4);color:var(--red)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  #app{grid-template-columns:1fr}
+  #sidebar{display:none}
+  .form-row{grid-template-columns:1fr}
+  .day-edit-row{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-suits">♠ ♥ ♦ ♣</div>
+    <div class="login-logo">ADGstream</div>
+    <div class="login-sub">Panel Administrateur</div>
+    <div class="login-field">
+      <label>Mot de passe</label>
+      <input type="password" id="pwd-input" placeholder="••••••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">✦ Connexion</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="tb-left">
+      <a href="/" class="tb-logo">ADGstream</a>
+      <span class="tb-badge">Admin</span>
+      <div class="tb-status">
+        <div class="tb-dot" id="tb-dot"></div>
+        <span id="tb-live">Vérification…</span>
+      </div>
+    </div>
+    <div class="tb-right">
+      <a href="/" target="_blank" class="tb-btn">♠ Voir le site</a>
+      <button class="tb-btn danger" onclick="doLogout()">Déconnexion</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="sb-section">Contenu</div>
+    <div class="sb-link active" onclick="showPane('hero')"     data-pane="hero">    <span class="ico">🃏</span> Hero / Accueil    <div class="sb-save-badge" id="badge-hero"></div></div>
+    <div class="sb-link"        onclick="showPane('about')"    data-pane="about">   <span class="ico">♠</span>  À propos          <div class="sb-save-badge" id="badge-about"></div></div>
+    <div class="sb-link"        onclick="showPane('schedule')" data-pane="schedule"><span class="ico">📅</span> Planning          <div class="sb-save-badge" id="badge-schedule"></div></div>
+    <div class="sb-link"        onclick="showPane('clips')"    data-pane="clips">   <span class="ico">▶</span>  Clips             <div class="sb-save-badge" id="badge-clips"></div></div>
+    <div class="sb-link"        onclick="showPane('social')"   data-pane="social">  <span class="ico">♦</span>  Réseaux sociaux   <div class="sb-save-badge" id="badge-social"></div></div>
+    <div class="sb-section">Intégrations</div>
+    <div class="sb-link"        onclick="showPane('twitch')"   data-pane="twitch">  <span class="ico">♥</span>  Twitch / Discord  <div class="sb-save-badge" id="badge-twitch"></div></div>
+    <div class="sb-section">Paramètres</div>
+    <div class="sb-link"        onclick="showPane('settings')" data-pane="settings"><span class="ico">⚙</span>  Paramètres</div>
+  </div>
+
+  <!-- CONTENT PANES -->
+  <div id="content">
+
+    <!-- ── HERO ── -->
+    <div class="pane active" id="pane-hero">
+      <div class="pane-title" data-ico="🃏">Hero — Page d'accueil</div>
+      <div class="s-card">
+        <div class="s-card-title">Textes principaux</div>
+        <div class="field"><label>Accroche (petite ligne au dessus du nom)</label><input type="text" id="hero_eyebrow" oninput="markDirty('hero')"></div>
+        <div class="field"><label>Nom / Titre principal</label><input type="text" id="hero_name" oninput="markDirty('hero')"></div>
+        <div class="field"><label>Tagline (sous le nom)</label><input type="text" id="hero_tag" oninput="markDirty('hero')"></div>
+        <div class="field"><label>Texte bouton Twitch</label><input type="text" id="hero_btn_watch" oninput="markDirty('hero')"></div>
+      </div>
+      <div class="save-bar">
+        <button class="save-btn" onclick="savePane('hero')">✦ Sauvegarder</button>
+        <span class="save-status" id="status-hero"></span>
+      </div>
+    </div>
+
+    <!-- ── ABOUT ── -->
+    <div class="pane" id="pane-about">
+      <div class="pane-title" data-ico="♠">À propos</div>
+      <div class="s-card">
+        <div class="s-card-title">Textes</div>
+        <div class="field"><label>Titre de section</label><input type="text" id="about_title" oninput="markDirty('about')"></div>
+        <div class="field"><label>Paragraphe 1</label><textarea id="about_p1" oninput="markDirty('about')"></textarea></div>
+        <div class="field"><label>Paragraphe 2</label><textarea id="about_p2" oninput="markDirty('about')"></textarea></div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-title">Statistiques</div>
+        <div class="form-row">
+          <div class="field"><label>Stat 1 — Nombre</label><input type="text" id="stat1_num" oninput="markDirty('about')"></div>
+          <div class="field"><label>Stat 1 — Label</label><input type="text" id="stat1_lbl" oninput="markDirty('about')"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Stat 2 — Nombre</label><input type="text" id="stat2_num" oninput="markDirty('about')"></div>
+          <div class="field"><label>Stat 2 — Label</label><input type="text" id="stat2_lbl" oninput="markDirty('about')"></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Stat 3 — Nombre</label><input type="text" id="stat3_num" oninput="markDirty('about')"></div>
+          <div class="field"><label>Stat 3 — Label</label><input type="text" id="stat3_lbl" oninput="markDirty('about')"></div>
+        </div>
+      </div>
+      <div class="save-bar">
+        <button class="save-btn" onclick="savePane('about')">✦ Sauvegarder</button>
+        <span class="save-status" id="status-about"></span>
+      </div>
+    </div>
+
+    <!-- ── SCHEDULE ── -->
+    <div class="pane" id="pane-schedule">
+      <div class="pane-title" data-ico="📅">Planning des streams</div>
+      <div class="s-card">
+        <div class="s-card-title">Semaine</div>
+        <div class="field"><label>Dates affichées (ex: 10 – 17 Nov)</label><input type="text" id="schedule_week" oninput="markDirty('schedule')"></div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-title">Jours — Numéro · Activité · Horaire · Offline</div>
+        <div id="days-editor"></div>
+      </div>
+      <div class="save-bar">
+        <button class="save-btn" onclick="savePane('schedule')">✦ Sauvegarder</button>
+        <span class="save-status" id="status-schedule"></span>
+      </div>
+    </div>
+
+    <!-- ── CLIPS ── -->
+    <div class="pane" id="pane-clips">
+      <div class="pane-title" data-ico="▶">Clips & Highlights</div>
+      <div class="s-card">
+        <div class="s-card-title">Liste des clips</div>
+        <div id="clips-editor"></div>
+        <button class="add-clip-btn" onclick="addClip()">+ Ajouter un clip</button>
+      </div>
+      <div class="save-bar">
+        <button class="save-btn" onclick="savePane('clips')">✦ Sauvegarder</button>
+        <span class="save-status" id="status-clips"></span>
+      </div>
+    </div>
+
+    <!-- ── SOCIAL ── -->
+    <div class="pane" id="pane-social">
+      <div class="pane-title" data-ico="♦">Réseaux sociaux</div>
+      <div class="s-card">
+        <div class="s-card-title">Liens</div>
+        <div class="field"><label>Twitch (URL complète)</label><input type="url" id="social_twitch" placeholder="https://twitch.tv/..." oninput="markDirty('social')"></div>
+        <div class="field"><label>Discord (URL invitation)</label><input type="url" id="social_discord" placeholder="https://discord.gg/..." oninput="markDirty('social')"></div>
+        <div class="field"><label>TikTok (URL profil)</label><input type="url" id="social_tiktok" placeholder="https://tiktok.com/@..." oninput="markDirty('social')"></div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-title">Footer</div>
+        <div class="field"><label>Tagline footer</label><input type="text" id="footer_tag" oninput="markDirty('social')"></div>
+      </div>
+      <div class="save-bar">
+        <button class="save-btn" onclick="savePane('social')">✦ Sauvegarder</button>
+        <span class="save-status" id="status-social"></span>
+      </div>
+    </div>
+
+    <!-- ── TWITCH / DISCORD ── -->
+    <div class="pane" id="pane-twitch">
+      <div class="pane-title" data-ico="♥">Twitch &amp; Discord</div>
+      <div class="s-card">
+        <div class="s-card-title">Twitch</div>
+        <div class="field"><label>Nom de chaîne Twitch (sans https://)</label><input type="text" id="twitch_channel" placeholder="adgstream" oninput="markDirty('twitch')"></div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-title">Discord</div>
+        <div class="field"><label>Code d'invitation (ex: kcRtUEnb)</label><input type="text" id="discord_invite" placeholder="kcRtUEnb" oninput="markDirty('twitch')"></div>
+        <div class="field">
+          <label>ID du serveur (pour le widget membres)</label>
+          <input type="text" id="discord_guild_id" placeholder="123456789012345678" oninput="markDirty('twitch')">
+          <span style="font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.05em">→ Discord: Paramètres serveur → Widget → Activer → Copier l'ID</span>
+        </div>
+      </div>
+      <div class="save-bar">
+        <button class="save-btn" onclick="savePane('twitch')">✦ Sauvegarder</button>
+        <span class="save-status" id="status-twitch"></span>
+      </div>
+    </div>
+
+    <!-- ── SETTINGS ── -->
+    <div class="pane" id="pane-settings">
+      <div class="pane-title" data-ico="⚙">Paramètres</div>
+      <div class="s-card">
+        <div class="s-card-title">Sécurité — Mot de passe admin</div>
+        <div class="pwd-row">
+          <div class="field"><label>Nouveau mot de passe (min 6 caractères)</label><input type="password" id="new-pwd" placeholder="••••••••••••" autocomplete="new-password"></div>
+          <button class="pwd-btn" onclick="changePwd()">Changer</button>
+        </div>
+        <div id="pwd-status" style="font-size:12px;margin-top:8px;min-height:18px"></div>
+      </div>
+      <div class="s-card">
+        <div class="s-card-title">Liens rapides</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <a href="/" target="_blank" class="tb-btn">♠ Accueil</a>
+          <a href="/live" target="_blank" class="tb-btn">● Live</a>
+          <a href="/clips" target="_blank" class="tb-btn">▶ Clips</a>
+          <a href="/social" target="_blank" class="tb-btn">♦ Réseaux</a>
+        </div>
+      </div>
+      <div class="s-card" style="border-color:rgba(239,68,68,.2)">
+        <div class="s-card-title" style="color:rgba(239,68,68,.5)">Zone danger</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px;letter-spacing:.04em">Réinitialiser tout le contenu aux valeurs par défaut. Cette action est irréversible.</p>
+        <button class="tb-btn danger" onclick="confirmReset()">⚠ Réinitialiser le contenu</button>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app -->
+
+<div id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
+let DATA = {};
+let dirty = {}; // which panes have unsaved changes
+
+/* ══════════════════════════════════════
+   LOGIN
+══════════════════════════════════════ */
+async function doLogin() {
+  const pwd = document.getElementById('pwd-input').value;
+  const err = document.getElementById('login-err');
+  err.textContent = '';
+  try {
+    const r = await fetch('/api/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ password: pwd })
+    });
+    const d = await r.json();
+    if (!r.ok) { err.textContent = d.error || 'Erreur'; return; }
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+    initApp();
+  } catch(e) {
+    err.textContent = 'Erreur de connexion au serveur';
+  }
+}
+
+document.getElementById('pwd-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+async function doLogout() {
+  await fetch('/api/logout', { method: 'POST' });
+  location.reload();
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+async function initApp() {
+  // Check auth first
+  const ca = await fetch('/api/check-auth');
+  const cd = await ca.json();
+  if (!cd.authed) {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('app').classList.remove('show');
+    return;
+  }
+  // Load content
+  const r = await fetch('/api/content');
+  DATA = await r.json();
+  populateAll();
+  checkLive();
+  setInterval(checkLive, 60000);
+}
+
+// Check if already authed on page load
+(async () => {
+  const r = await fetch('/api/check-auth');
+  const d = await r.json();
+  if (d.authed) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').classList.add('show');
+    initApp();
+  }
+})();
+
+/* ══════════════════════════════════════
+   POPULATE ALL FIELDS
+══════════════════════════════════════ */
+function populateAll() {
+  // Hero
+  setVal('hero_eyebrow', DATA.hero_eyebrow);
+  setVal('hero_name', DATA.hero_name);
+  setVal('hero_tag', DATA.hero_tag);
+  setVal('hero_btn_watch', DATA.hero_btn_watch);
+  // About
+  setVal('about_title', DATA.about_title);
+  setVal('about_p1', DATA.about_p1);
+  setVal('about_p2', DATA.about_p2);
+  setVal('stat1_num', DATA.stat1_num); setVal('stat1_lbl', DATA.stat1_lbl);
+  setVal('stat2_num', DATA.stat2_num); setVal('stat2_lbl', DATA.stat2_lbl);
+  setVal('stat3_num', DATA.stat3_num); setVal('stat3_lbl', DATA.stat3_lbl);
+  // Schedule
+  setVal('schedule_week', DATA.schedule_week);
+  renderDaysEditor(DATA.schedule_days || []);
+  // Clips
+  renderClipsEditor(DATA.clips || []);
+  // Social
+  setVal('social_twitch',  DATA.social_links?.twitch  || '');
+  setVal('social_discord', DATA.social_links?.discord || '');
+  setVal('social_tiktok',  DATA.social_links?.tiktok  || '');
+  setVal('footer_tag', DATA.footer_tag);
+  // Twitch/Discord
+  setVal('twitch_channel',    DATA.twitch_channel);
+  setVal('discord_invite',    DATA.discord_invite);
+  setVal('discord_guild_id',  DATA.discord_guild_id);
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val || '';
+}
+
+/* ══════════════════════════════════════
+   DAYS EDITOR
+══════════════════════════════════════ */
+const DAY_NAMES = ['DIM','LUN','MAR','MER','JEU','VEN','SAM'];
+
+function renderDaysEditor(days) {
+  const wrap = document.getElementById('days-editor');
+  wrap.innerHTML = days.map((d, i) => `
+    <div class="day-edit-row ${d.off?'offline-row':''}" id="day-row-${i}">
+      <div class="day-lbl">${d.day}</div>
+      <input class="day-num-in" type="text" value="${d.num}" id="dn-${i}" placeholder="#" oninput="markDirty('schedule')" title="Numéro du jour">
+      <input class="day-act-in ${d.off?'':''}'" type="text" value="${d.act||''}" id="da-${i}" placeholder="${d.off?'—':' Activité…'}" ${d.off?'disabled':''} oninput="markDirty('schedule')">
+      <input class="day-time-in" type="text" value="${d.time||''}" id="dt-${i}" placeholder="${d.off?'—':'Horaire…'}" ${d.off?'disabled':''} oninput="markDirty('schedule')">
+      <label class="tog" title="Offline">
+        <input type="checkbox" ${d.off?'checked':''} onchange="toggleDayOff(${i},this.checked)">
+        <div class="tog-track"><div class="tog-knob"></div></div>
+      </label>
+    </div>
+  `).join('');
+}
+
+function toggleDayOff(i, off) {
+  const days = getDaysFromEditor();
+  days[i].off = off;
+  renderDaysEditor(days);
+  markDirty('schedule');
+}
+
+function getDaysFromEditor() {
+  return DAY_NAMES.map((name, i) => {
+    const numEl  = document.getElementById(`dn-${i}`);
+    const actEl  = document.getElementById(`da-${i}`);
+    const timeEl = document.getElementById(`dt-${i}`);
+    const togEl  = document.querySelector(`#day-row-${i} input[type=checkbox]`);
+    return {
+      day:  name,
+      num:  numEl  ? numEl.value  : String(i+10),
+      act:  actEl  ? actEl.value  : '',
+      time: timeEl ? timeEl.value : '',
+      off:  togEl  ? togEl.checked : false,
+    };
+  });
+}
+
+/* ══════════════════════════════════════
+   CLIPS EDITOR
+══════════════════════════════════════ */
+let clips = [];
+
+function renderClipsEditor(list) {
+  clips = JSON.parse(JSON.stringify(list));
+  const wrap = document.getElementById('clips-editor');
+  wrap.innerHTML = clips.map((c, i) => `
+    <div class="clip-edit-row" id="clip-${i}">
+      <div class="clip-edit-title">Clip ${i+1}</div>
+      <button class="clip-del" onclick="deleteClip(${i})">✕ Supprimer</button>
+      <div class="clip-edit-grid">
+        <div class="field" style="margin:0"><label>Titre</label><input type="text" value="${esc(c.title)}" id="ct-${i}" oninput="markDirty('clips')"></div>
+        <div class="field" style="margin:0"><label>Lien (URL)</label><input type="url" value="${esc(c.link)}" id="cl-${i}" oninput="markDirty('clips')"></div>
+        <div class="field" style="margin:0"><label>Vues</label><input type="text" value="${esc(c.views)}" id="cv-${i}" oninput="markDirty('clips')"></div>
+        <div class="field" style="margin:0"><label>Date affichée</label><input type="text" value="${esc(c.date)}" id="cd-${i}" oninput="markDirty('clips')"></div>
+        <div class="field" style="margin:0">
+          <label>Catégorie</label>
+          <select id="cc-${i}" onchange="markDirty('clips')">
+            ${['poker','magie','casino'].map(cat=>`<option value="${cat}" ${c.cat===cat?'selected':''}>${cat}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field" style="margin:0">
+          <label>Symbole (suit)</label>
+          <select id="cs-${i}" onchange="markDirty('clips')">
+            ${['♠','♥','♦','♣'].map(s=>`<option value="${s}" ${c.suit===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function esc(s) { return (s||'').replace(/"/g,'&quot;'); }
+
+function addClip() {
+  clips.push({ title:'Nouveau clip', views:'0 vues', date:'Aujourd\'hui', suit:'♠', cat:'poker', link:'https://twitch.tv/adgstream' });
+  renderClipsEditor(clips);
+  markDirty('clips');
+}
+
+function deleteClip(i) {
+  if (!confirm(`Supprimer le clip "${clips[i]?.title}" ?`)) return;
+  clips.splice(i, 1);
+  renderClipsEditor(clips);
+  markDirty('clips');
+}
+
+function getClipsFromEditor() {
+  return clips.map((_, i) => ({
+    title: document.getElementById(`ct-${i}`)?.value || '',
+    link:  document.getElementById(`cl-${i}`)?.value || '',
+    views: document.getElementById(`cv-${i}`)?.value || '',
+    date:  document.getElementById(`cd-${i}`)?.value || '',
+    cat:   document.getElementById(`cc-${i}`)?.value || 'poker',
+    suit:  document.getElementById(`cs-${i}`)?.value || '♠',
+  }));
+}
+
+/* ══════════════════════════════════════
+   SAVE
+══════════════════════════════════════ */
+const PANE_KEYS = {
+  hero:     ['hero_eyebrow','hero_name','hero_tag','hero_btn_watch'],
+  about:    ['about_title','about_p1','about_p2','stat1_num','stat1_lbl','stat2_num','stat2_lbl','stat3_num','stat3_lbl'],
+  schedule: ['schedule_week'],
+  social:   ['footer_tag'],
+  twitch:   ['twitch_channel','discord_invite','discord_guild_id'],
+};
+
+async function savePane(pane) {
+  const btn = document.querySelector(`#pane-${pane} .save-btn`);
+  const st  = document.getElementById(`status-${pane}`);
+  btn.disabled = true; btn.textContent = '…';
+
+  let payload = {};
+
+  if (PANE_KEYS[pane]) {
+    PANE_KEYS[pane].forEach(k => {
+      const el = document.getElementById(k);
+      if (el) payload[k] = el.value;
+    });
+  }
+
+  // Special panes
+  if (pane === 'schedule') {
+    payload.schedule_days = getDaysFromEditor();
+  }
+  if (pane === 'clips') {
+    payload.clips = getClipsFromEditor();
+  }
+  if (pane === 'social') {
+    payload.social_links = {
+      twitch:  document.getElementById('social_twitch')?.value  || '',
+      discord: document.getElementById('social_discord')?.value || '',
+      tiktok:  document.getElementById('social_tiktok')?.value  || '',
+    };
+  }
+
+  try {
+    const r = await fetch('/api/content', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const d = await r.json();
+    if (r.ok) {
+      showStatus(st, '✓ Sauvegardé', 'ok');
+      dirty[pane] = false;
+      document.getElementById(`badge-${pane}`)?.classList.remove('show');
+      toast('✦ Sauvegardé avec succès', 'ok');
+      // Update local DATA
+      DATA = { ...DATA, ...payload };
+    } else {
+      showStatus(st, '✗ ' + (d.error||'Erreur'), 'err');
+      toast('Erreur : ' + (d.error||'inconnue'), 'err');
+    }
+  } catch(e) {
+    showStatus(st, '✗ Erreur réseau', 'err');
+    toast('Erreur réseau', 'err');
+  }
+
+  btn.disabled = false; btn.textContent = '✦ Sauvegarder';
+}
+
+function showStatus(el, msg, type) {
+  if (!el) return;
+  el.textContent = msg;
+  el.className = `save-status show ${type}`;
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+/* ══════════════════════════════════════
+   DIRTY TRACKING
+══════════════════════════════════════ */
+function markDirty(pane) {
+  dirty[pane] = true;
+  const badge = document.getElementById(`badge-${pane}`);
+  if (badge) badge.classList.add('show');
+}
+
+/* ══════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════ */
+function showPane(name) {
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  document.getElementById(`pane-${name}`)?.classList.add('active');
+  document.querySelector(`[data-pane="${name}"]`)?.classList.add('active');
+}
+
+/* ══════════════════════════════════════
+   CHANGE PASSWORD
+══════════════════════════════════════ */
+async function changePwd() {
+  const pwd = document.getElementById('new-pwd').value;
+  const st  = document.getElementById('pwd-status');
+  if (!pwd || pwd.length < 6) { st.style.color='var(--red)'; st.textContent='Minimum 6 caractères'; return; }
+  const r = await fetch('/api/change-password', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ password: pwd })
+  });
+  const d = await r.json();
+  if (r.ok) {
+    st.style.color='var(--green)'; st.textContent='✓ Mot de passe changé !';
+    document.getElementById('new-pwd').value = '';
+    toast('✦ Mot de passe mis à jour', 'ok');
+  } else {
+    st.style.color='var(--red)'; st.textContent='✗ ' + (d.error||'Erreur');
+  }
+}
+
+/* ══════════════════════════════════════
+   RESET
+══════════════════════════════════════ */
+async function confirmReset() {
+  if (!confirm('⚠ Réinitialiser TOUT le contenu aux valeurs par défaut ?\n\nCette action est irréversible.')) return;
+  const defaults = {
+    hero_eyebrow:'The House Always Streams', hero_name:'ADGstream',
+    hero_tag:'Streamer · Casino · Card Magic', hero_btn_watch:'Regarder sur Twitch',
+    about_title:'La magie des cartes, en live',
+    about_p1:'Bienvenue sur ma chaîne — un espace dédié aux jeux de cartes, au casino et à la magie.',
+    about_p2:'Je stream du poker, du blackjack et parfois des tours de magie. Rejoins-nous !',
+    stat1_num:'12K',stat1_lbl:'Followers',stat2_num:'3×',stat2_lbl:'Par semaine',stat3_num:'2 ans',stat3_lbl:'En stream',
+    footer_tag:'La table est toujours ouverte',
+  };
+  await fetch('/api/content',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(defaults)});
+  toast('↩ Contenu réinitialisé','ok');
+  const r = await fetch('/api/content'); DATA = await r.json(); populateAll();
+}
+
+/* ══════════════════════════════════════
+   LIVE STATUS
+══════════════════════════════════════ */
+async function checkLive() {
+  try {
+    const ch = DATA.twitch_channel || 'adgstream';
+    const r   = await fetch(`https://decapi.me/twitch/uptime/${ch}`,{cache:'no-store'});
+    const txt = await r.text();
+    const live = txt.trim().length>0 && !txt.toLowerCase().includes('offline') && !txt.toLowerCase().includes('error');
+    const dot  = document.getElementById('tb-dot');
+    const lbl  = document.getElementById('tb-live');
+    if (dot) dot.classList.toggle('on', live);
+    if (lbl) lbl.textContent = live ? '🔴 En direct' : 'Offline';
+  } catch(e) {}
+}
+
+/* ══════════════════════════════════════
+   TOAST
+══════════════════════════════════════ */
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `show ${type}`;
+  clearTimeout(t._t); t._t = setTimeout(() => t.className = '', 2800);
+}
+</script>
+</body>
+</html>

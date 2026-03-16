@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADGstream — Blackjack</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>♠</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<div id="bg"></div><div id="bgg"></div>
+<button id="theme-fab" onclick="toggleTheme()">🔥 Facolix</button>
+<nav id="nav">
+  <a href="/" class="nlogo">ADGstream</a>
+  <ul class="nlinks">
+    <li><a href="/#about">À propos</a></li><li><a href="/#schedule">Schedule</a></li>
+    <li><a href="/live">Live</a></li><li><a href="/clips">Clips</a></li>
+    <li><a href="/histoire">Histoire</a></li><li><a href="/content">Contenu</a></li>
+    <li><a href="/blackjack" class="active">Blackjack</a></li>
+    <li><a href="/facolix">Facolix 🔥</a></li><li><a href="/social">Réseaux</a></li>
+  </ul>
+  <div class="nstatus"><div class="ldot" id="ldot"></div><span id="ltext">Offline</span></div>
+  <div class="burger" id="burger" onclick="toggleDrawer()"><span></span><span></span><span></span></div>
+</nav>
+<div class="drawer" id="drawer">
+  <a href="/">Accueil</a><a href="/live">Live</a><a href="/clips">Clips</a>
+  <a href="/histoire">Histoire</a><a href="/content">Contenu</a>
+  <a href="/blackjack">Blackjack</a><a href="/facolix">Facolix 🔥</a><a href="/social">Réseaux</a>
+</div>
+<div id="livebanner"><div class="lp"></div><span>ADGstream est en direct !</span><a href="/live">Regarder ♠</a></div>
+
+<div id="bj-page">
+  <div style="text-align:center;padding:90px 5% 10px">
+    <div class="seye" style="justify-content:center">✦ Casino ADGstream</div>
+    <h1 class="sttl" style="text-align:center">Blackjack <em>♠</em></h1>
+  </div>
+
+  <!-- Paywall -->
+  <div id="bj-paywall" style="display:none">
+    <div class="bj-paywall">
+      <div style="font-size:48px;color:rgba(124,58,237,.3);margin-bottom:16px">♠</div>
+      <h3>Continuer pour 1€</h3>
+      <p id="bj-paywall-msg">Soutenez le stream pour continuer à jouer ! Chaque partie = 1€ de soutien ♦</p>
+      <a href="https://ko-fi.com/adgstream" target="_blank" class="kofi-btn kofi-link" style="margin:0 auto 16px;display:inline-flex">♦ Soutenir sur Ko-fi</a>
+      <br>
+      <button class="bj-btn bj-btn-deal" style="margin-top:12px" onclick="redeemPaid()">J'ai soutenu — Jouer 10 parties</button>
+    </div>
+  </div>
+
+  <!-- Game -->
+  <div id="bj-game" style="width:100%;max-width:960px;margin:0 auto;padding:0 16px">
+    <div class="bj-info-bar">
+      <div class="bj-chips">
+        <span>♦</span>
+        <span>Mise :</span>
+        <strong id="bj-bet-display">10</strong>
+        <span style="margin-left:16px">Solde :</span>
+        <strong id="bj-chips-display">1000</strong>
+      </div>
+      <div class="bj-counter" id="bj-rounds-left" style="margin:0"></div>
+    </div>
+
+    <!-- Bet selector -->
+    <div class="bj-bet-row" id="bet-row">
+      <button class="bj-chip-btn" style="background:#0e001c;border-color:var(--v6);color:var(--v8)" onclick="placeBet(5)">5</button>
+      <button class="bj-chip-btn" style="background:#150028;border-color:var(--v7);color:var(--v9)" onclick="placeBet(10)">10</button>
+      <button class="bj-chip-btn" style="background:#1a1400;border-color:#d4af37;color:#d4af37" onclick="placeBet(25)">25</button>
+      <button class="bj-chip-btn" style="background:#0e001c;border-color:var(--v8);color:var(--v9)" onclick="placeBet(50)">50</button>
+      <button class="bj-chip-btn" style="background:#1a0028;border-color:var(--v5);color:var(--v7)" onclick="placeBet(100)">100</button>
+    </div>
+
+    <div class="bj-table" id="bj-table">
+      <!-- Dealer -->
+      <div class="bj-section-label">♠ Croupier</div>
+      <div class="bj-cards-row" id="dealer-cards"></div>
+      <div class="bj-score" id="dealer-score"></div>
+
+      <hr class="bj-divider">
+
+      <!-- Player -->
+      <div class="bj-section-label">♦ Vous</div>
+      <div class="bj-cards-row" id="player-cards"></div>
+      <div class="bj-score" id="player-score"></div>
+
+      <!-- Actions -->
+      <div class="bj-actions" id="bj-actions" style="display:none">
+        <button class="bj-btn bj-btn-hit"    id="btn-hit"    onclick="playerHit()">Tirer</button>
+        <button class="bj-btn bj-btn-stand"  id="btn-stand"  onclick="playerStand()">Rester</button>
+        <button class="bj-btn bj-btn-double" id="btn-double" onclick="playerDouble()">Double</button>
+      </div>
+
+      <div class="bj-actions">
+        <button class="bj-btn bj-btn-deal" id="btn-deal" onclick="startRound()">Distribuer ♠</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:20px">
+    <a href="/" class="btn bo" style="font-size:10px">♠ Retour au site</a>
+  </div>
+</div>
+
+<footer>
+  <div class="flogo">ADGstream</div>
+  <div class="ftag" id="footer_tag">La table est toujours ouverte</div>
+  <div class="fsuits">♠ ♥ ♦ ♣</div>
+  <div class="fcopy">© 2025 ADGstream</div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script>
+/* ══════════════════════════════
+   BLACKJACK ENGINE
+══════════════════════════════ */
+const SUITS = ['♠','♥','♦','♣'];
+const VALUES = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+let deck = [], playerHand = [], dealerHand = [], chips = 1000, currentBet = 10;
+let gameOver = true, freeRounds, paidRounds;
+
+function initRounds() {
+  const settings = window._bjSettings || { free_rounds: 3 };
+  freeRounds = parseInt(localStorage.getItem('bj_free_rounds') || settings.free_rounds);
+  paidRounds = parseInt(localStorage.getItem('bj_paid_rounds') || '0');
+  updateRoundsDisplay();
+}
+
+function updateRoundsDisplay() {
+  const el = document.getElementById('bj-rounds-left');
+  if (!el) return;
+  const total = freeRounds + paidRounds;
+  el.textContent = `Parties restantes : ${total}`;
+  el.style.color = total <= 1 ? 'var(--red,#ef4444)' : 'var(--muted)';
+}
+
+function canPlay() {
+  return freeRounds > 0 || paidRounds > 0;
+}
+
+function consumeRound() {
+  if (paidRounds > 0) {
+    paidRounds--;
+    localStorage.setItem('bj_paid_rounds', paidRounds);
+  } else if (freeRounds > 0) {
+    freeRounds--;
+    localStorage.setItem('bj_free_rounds', freeRounds);
+  }
+  updateRoundsDisplay();
+}
+
+function redeemPaid() {
+  paidRounds += 10;
+  localStorage.setItem('bj_paid_rounds', paidRounds);
+  document.getElementById('bj-paywall').style.display = 'none';
+  document.getElementById('bj-game').style.display = '';
+  updateRoundsDisplay();
+}
+
+function buildDeck() {
+  deck = [];
+  for (const s of SUITS) for (const v of VALUES) deck.push({ v, s });
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+}
+
+function drawCard() {
+  if (deck.length < 15) buildDeck();
+  return deck.pop();
+}
+
+function cardValue(card) {
+  if (['J','Q','K'].includes(card.v)) return 10;
+  if (card.v === 'A') return 11;
+  return parseInt(card.v);
+}
+
+function handTotal(hand) {
+  let total = 0, aces = 0;
+  for (const c of hand) {
+    total += cardValue(c);
+    if (c.v === 'A') aces++;
+  }
+  while (total > 21 && aces > 0) { total -= 10; aces--; }
+  return total;
+}
+
+function isRed(card) { return card.s === '♥' || card.s === '♦'; }
+
+function renderCard(card, faceDown = false) {
+  if (faceDown) return `<div class="bj-card face-down"></div>`;
+  return `<div class="bj-card ${isRed(card)?'red':'black'}">
+    <div><div class="cv">${card.v}</div><div class="cs">${card.s}</div></div>
+    <div><div class="cv2">${card.v}</div><div class="cs2">${card.s}</div></div>
+  </div>`;
+}
+
+function renderHands(hideDealer = true) {
+  const dc = document.getElementById('dealer-cards');
+  const pc = document.getElementById('player-cards');
+  if (dc) dc.innerHTML = dealerHand.map((c,i) => renderCard(c, hideDealer && i===1)).join('');
+  if (pc) pc.innerHTML = playerHand.map(c => renderCard(c)).join('');
+  const ps = document.getElementById('player-score');
+  const ds = document.getElementById('dealer-score');
+  const pt = handTotal(playerHand);
+  if (ps) { ps.textContent = `Total : ${pt}`; ps.className = 'bj-score' + (pt > 21 ? ' bust' : ''); }
+  if (ds && !hideDealer) {
+    const dt = handTotal(dealerHand);
+    ds.textContent = `Total : ${dt}`;
+    ds.className = 'bj-score' + (dt > 21 ? ' bust' : '');
+  } else if (ds) ds.textContent = '';
+}
+
+function placeBet(amount) {
+  if (!gameOver) return;
+  currentBet = Math.min(amount, chips);
+  document.getElementById('bj-bet-display').textContent = currentBet;
+}
+
+function startRound() {
+  if (!canPlay()) {
+    document.getElementById('bj-paywall').style.display = 'flex';
+    document.getElementById('bj-game').style.display = 'none';
+    // Update paywall message
+    const msg = document.getElementById('bj-paywall-msg');
+    if (msg && window._bjSettings?.message) msg.textContent = window._bjSettings.message;
+    return;
+  }
+  consumeRound();
+  if (currentBet > chips) currentBet = chips;
+  if (currentBet <= 0) currentBet = 1;
+  if (deck.length < 15) buildDeck();
+  playerHand = [drawCard(), drawCard()];
+  dealerHand = [drawCard(), drawCard()];
+  gameOver = false;
+  removeOverlay();
+  document.getElementById('bj-actions').style.display = 'flex';
+  document.getElementById('btn-deal').style.display = 'none';
+  document.getElementById('btn-double').disabled = false;
+  renderHands(true);
+  updateChipsDisplay();
+  // Natural blackjack
+  if (handTotal(playerHand) === 21) { setTimeout(() => playerStand(), 600); }
+}
+
+function playerHit() {
+  if (gameOver) return;
+  playerHand.push(drawCard());
+  document.getElementById('btn-double').disabled = true;
+  renderHands(true);
+  if (handTotal(playerHand) >= 21) playerStand();
+}
+
+function playerStand() {
+  if (gameOver) return;
+  // Dealer plays
+  while (handTotal(dealerHand) < 17) dealerHand.push(drawCard());
+  endRound();
+}
+
+function playerDouble() {
+  if (gameOver || playerHand.length > 2) return;
+  const dbl = Math.min(currentBet, chips - currentBet);
+  currentBet += dbl;
+  document.getElementById('bj-bet-display').textContent = currentBet;
+  playerHand.push(drawCard());
+  playerStand();
+}
+
+function endRound() {
+  gameOver = true;
+  renderHands(false);
+  document.getElementById('bj-actions').style.display = 'none';
+  document.getElementById('btn-deal').style.display = '';
+
+  const pt = handTotal(playerHand), dt = handTotal(dealerHand);
+  let result = '', gain = 0, cls = '';
+
+  if (pt > 21) { result = 'Bust !'; gain = -currentBet; cls = 'bj-result-lose'; }
+  else if (dt > 21) { result = 'Gagné !'; gain = currentBet; cls = 'bj-result-win'; }
+  else if (pt === 21 && playerHand.length === 2 && !(dt === 21 && dealerHand.length === 2)) {
+    result = 'Blackjack !'; gain = Math.floor(currentBet * 1.5); cls = 'bj-result-win';
+  }
+  else if (pt > dt) { result = 'Gagné !'; gain = currentBet; cls = 'bj-result-win'; }
+  else if (pt < dt) { result = 'Perdu !'; gain = -currentBet; cls = 'bj-result-lose'; }
+  else { result = 'Égalité'; gain = 0; cls = 'bj-result-push'; }
+
+  chips = Math.max(0, chips + gain);
+  if (chips <= 0) chips = 1000; // Reset chips when broke
+  localStorage.setItem('bj_chips', chips);
+  updateChipsDisplay();
+  showOverlay(result, cls, gain);
+}
+
+function showOverlay(text, cls, gain) {
+  removeOverlay();
+  const div = document.createElement('div');
+  div.className = 'bj-result-overlay';
+  div.id = 'bj-overlay';
+  const gainStr = gain > 0 ? `+${gain}` : gain === 0 ? '±0' : `${gain}`;
+  div.innerHTML = `
+    <div class="bj-result-text ${cls}">${text}</div>
+    <div style="font-family:'Cinzel',serif;font-size:16px;color:${gain>0?'#86efac':gain<0?'#f87171':'#d4af37'}">${gainStr} jetons</div>
+    <button class="bj-btn bj-btn-deal" onclick="removeOverlay();document.getElementById('btn-deal').click()" style="margin-top:8px">Rejouer ♠</button>`;
+  document.getElementById('bj-table').style.position = 'relative';
+  document.getElementById('bj-table').appendChild(div);
+}
+
+function removeOverlay() {
+  const o = document.getElementById('bj-overlay');
+  if (o) o.remove();
+}
+
+function updateChipsDisplay() {
+  const el = document.getElementById('bj-chips-display');
+  if (el) el.textContent = chips;
+}
+
+// Init
+document.addEventListener('DOMContentLoaded', () => {
+  chips = parseInt(localStorage.getItem('bj_chips') || '1000');
+  updateChipsDisplay();
+  buildDeck();
+  // Wait for content load to get settings
+  setTimeout(initRounds, 800);
+});
+</script>
+</body>
+</html>
