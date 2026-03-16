@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Los Ombras — Panel Diplomatie</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0008;--bg2:#120010;--bg3:#1a0018;--card:#1e0020;--border:rgba(180,0,200,.22);--borderh:rgba(220,0,255,.5);--r:#cc0000;--rh:#ff2222;--g:#00cc44;--y:#ccaa00;--v:#9900cc;--vh:#cc33ff;--white:#f0e0f5;--muted:rgba(240,200,255,.45)}
+body{background:var(--bg);color:var(--white);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--v)}
+header{background:rgba(18,0,16,.98);border-bottom:2px solid var(--r);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hlogo{font-size:18px;font-weight:800;background:linear-gradient(135deg,#ff2244,#cc00aa,#9900cc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hbadge{font-size:10px;letter-spacing:.25em;color:var(--muted);margin-top:2px}
+.hactions{display:flex;gap:8px}
+.hbtn{font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px;border-radius:6px;border:none;cursor:pointer;font-family:inherit;transition:all .2s}
+.hbtn-sync{background:var(--r);color:#fff}.hbtn-sync:hover{background:var(--rh)}
+.hbtn-add{background:rgba(0,180,60,.15);border:1px solid var(--g);color:#00ff55}.hbtn-add:hover{background:rgba(0,180,60,.25)}
+.sync-status{font-size:10px;color:var(--muted);margin-top:3px;text-align:right}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 5px var(--g);animation:pulse 1.5s infinite;margin-right:4px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px 24px;background:var(--bg2);border-bottom:1px solid var(--border)}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center}
+.sn{font-size:26px;font-weight:800}.sl{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.sa .sn{color:var(--g)}.sn2 .sn{color:#ccaa00}.sh .sn{color:var(--r)}.sr .sn{color:var(--vh)}
+.main{display:grid;grid-template-columns:1fr 340px;min-height:calc(100vh - 130px)}
+.fp{padding:18px 22px;border-right:1px solid var(--border)}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.pt{font-size:11px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+.filts{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.fb{font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+.fb:hover,.fb.active{border-color:var(--borderh);color:var(--white);background:rgba(180,0,200,.12)}
+.fb.fa.active{border-color:var(--g);color:var(--g);background:rgba(0,180,60,.1)}
+.fb.fn.active{border-color:#ccaa00;color:#ccaa00;background:rgba(180,150,0,.1)}
+.fb.fh.active{border-color:var(--r);color:var(--r);background:rgba(180,0,0,.1)}
+.sw{position:relative;margin-bottom:12px}
+.si{width:100%;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:8px;padding:9px 12px 9px 34px;color:var(--white);font-family:inherit;font-size:12px;outline:none}
+.si:focus{border-color:var(--borderh)}
+.si-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px}
+.fl{display:flex;flex-direction:column;gap:7px}
+.fcard{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:12px 14px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.fcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px}
+.fcard.allié::before{background:var(--g)}
+.fcard.neutre::before{background:#ccaa00}
+.fcard.hostile::before{background:var(--r)}
+.fcard.traque::before{background:#ff6600;animation:pulse .8s infinite}
+.fcard:hover{border-color:var(--borderh);transform:translateX(2px)}
+.fc-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.fc-name{font-weight:700;font-size:13px}
+.fc-badges{display:flex;gap:4px;flex-wrap:wrap}
+.badge{font-size:8px;letter-spacing:.15em;text-transform:uppercase;padding:2px 7px;border-radius:4px;font-weight:600;white-space:nowrap}
+.ba{background:rgba(0,180,60,.15);border:1px solid var(--g);color:var(--g)}
+.bn{background:rgba(180,150,0,.15);border:1px solid #ccaa00;color:#ccaa00}
+.bh{background:rgba(180,0,0,.15);border:1px solid var(--r);color:var(--r)}
+.br{background:rgba(130,40,255,.2);border:1px solid var(--vh);color:var(--vh)}
+.bt{background:rgba(255,70,0,.15);border:1px solid #ff6600;color:#ff8822;animation:pulse 1.5s infinite}
+.bch{background:rgba(0,160,50,.1);border:1px solid rgba(0,200,60,.35);color:#00cc44}
+.fc-note{font-size:11px;color:var(--muted);margin-top:4px}
+.fc-acts{display:flex;gap:5px;margin-top:8px}
+.fca{font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:4px;border:none;cursor:pointer;font-family:inherit;transition:all .18s}
+.fca-e{background:rgba(130,0,180,.2);border:1px solid rgba(130,0,180,.4);color:#cc88ff}.fca-e:hover{background:rgba(130,0,180,.35)}
+.fca-d{background:rgba(160,0,0,.2);border:1px solid rgba(160,0,0,.4);color:#ff6666}.fca-d:hover{background:rgba(160,0,0,.35)}
+.sp{background:var(--bg2);border-left:1px solid var(--border);padding:18px}
+.ss{margin-bottom:22px}
+.st{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.st::after{content:'';flex:1;height:1px;background:var(--border)}
+.dp{background:#36393f;border-radius:10px;padding:14px}
+.dph{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.dpa{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#cc0044,#9900cc);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.dpn{font-size:13px;font-weight:600;color:#fff}
+.dpt{font-size:10px;color:#72767d}
+.dpc{font-size:12px;line-height:1.65;color:#dcddde;white-space:pre-line;max-height:220px;overflow-y:auto}
+.dpc::-webkit-scrollbar{width:3px}.dpc::-webkit-scrollbar-thumb{background:#555}
+.dpf{font-size:9px;color:#72767d;margin-top:7px}
+.rdv-item{display:flex;align-items:center;gap:7px;padding:7px 10px;background:rgba(130,0,180,.08);border:1px solid rgba(130,0,180,.2);border-radius:7px;margin-bottom:5px;font-size:11px}
+.rdv-dot{width:7px;height:7px;border-radius:50%;background:var(--vh);flex-shrink:0}
+.rdv-del{margin-left:auto;background:none;border:none;color:var(--r);cursor:pointer;font-size:13px;padding:1px 5px}
+.form-group{margin-bottom:12px}
+.form-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
+.form-input,.form-select{width:100%;background:rgba(0,0,0,.4);border:1px solid rgba(160,0,180,.3);border-radius:6px;padding:8px 10px;color:var(--white);font-family:inherit;font-size:12px;outline:none;transition:border-color .2s}
+.form-input:focus,.form-select:focus{border-color:var(--vh)}
+.form-select{cursor:pointer}.form-select option{background:#1a0018}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:#1a0018;border:1px solid var(--borderh);border-radius:13px;padding:26px;width:100%;max-width:460px;box-shadow:0 0 60px rgba(160,0,200,.18)}
+.modal-title{font-size:15px;font-weight:700;letter-spacing:.08em;margin-bottom:18px;display:flex;align-items:center;gap:9px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-actions{display:flex;gap:8px;margin-top:18px;justify-content:flex-end}
+.mbtn{font-size:10px;letter-spacing:.18em;text-transform:uppercase;padding:9px 18px;border-radius:6px;border:none;cursor:pointer;font-family:inherit;transition:all .2s}
+.mb-save{background:var(--v);color:#fff}.mb-save:hover{background:var(--vh)}
+.mb-cancel{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:var(--muted)}.mb-cancel:hover{background:rgba(255,255,255,.13)}
+.chks{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px}
+.chk-label{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px}
+#toast{position:fixed;bottom:22px;right:22px;z-index:9999;background:rgba(20,0,18,.97);border:1px solid var(--borderh);border-radius:8px;padding:11px 18px;font-size:11px;letter-spacing:.12em;color:var(--vh);opacity:0;transform:translateY(10px);transition:all .22s;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.ok{border-color:rgba(0,180,60,.5);color:var(--g)}
+#toast.err{border-color:rgba(180,0,0,.4);color:var(--r)}
+@media(max-width:860px){.main{grid-template-columns:1fr}.sp{border-left:none;border-top:1px solid var(--border)}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="hlogo">⚔ Los Ombras — Diplomatie</div>
+    <div class="hbadge"># diplomatie · Panel de gestion</div>
+  </div>
+  <div>
+    <div class="hactions">
+      <button class="hbtn hbtn-add" onclick="openModal('add')">＋ Ajouter faction</button>
+      <button class="hbtn hbtn-sync" onclick="syncDiscord()">📡 Sync Discord</button>
+    </div>
+    <div class="sync-status"><span class="dot"></span>Webhook #diplomatie connecté</div>
+  </div>
+</header>
+
+<div class="stats">
+  <div class="sc sa"><div class="sn" id="c-a">0</div><div class="sl">✅ Alliés</div></div>
+  <div class="sc sn2"><div class="sn" id="c-n">0</div><div class="sl">🤝 Neutres</div></div>
+  <div class="sc sh"><div class="sn" id="c-h">0</div><div class="sl">⚔ Hostiles</div></div>
+  <div class="sc sr"><div class="sn" id="c-r">0</div><div class="sl">📅 RDV</div></div>
+</div>
+
+<div class="main">
+  <div class="fp">
+    <div class="ph">
+      <div class="pt">Factions — <span id="fcount">0</span></div>
+    </div>
+    <div class="sw"><span class="si-ico">🔍</span><input class="si" placeholder="Rechercher…" oninput="filterF(this.value)"></div>
+    <div class="filts">
+      <button class="fb active" onclick="setF('all',this)">Toutes</button>
+      <button class="fb fa" onclick="setF('allié',this)">✅ Alliés</button>
+      <button class="fb fn" onclick="setF('neutre',this)">🤝 Neutres</button>
+      <button class="fb fh" onclick="setF('hostile',this)">⚔ Hostiles</button>
+      <button class="fb" onclick="setF('rdv',this)">📅 RDV</button>
+      <button class="fb" onclick="setF('traque',this)">🔴 Traque</button>
+    </div>
+    <div class="fl" id="flist"></div>
+  </div>
+
+  <div class="sp">
+    <div class="ss">
+      <div class="st">Aperçu Discord</div>
+      <div class="dp">
+        <div class="dph">
+          <div class="dpa">⚔</div>
+          <div><div class="dpn">Los Ombras Bot</div><div class="dpt">Aujourd'hui à <span id="dpt">--:--</span></div></div>
+        </div>
+        <div class="dpc" id="dp-prev">…</div>
+        <div class="dpf">✦ Sync via webhook Discord</div>
+      </div>
+    </div>
+
+    <div class="ss">
+      <div class="st">RDV planifiés</div>
+      <div id="rdv-list"></div>
+      <button class="hbtn hbtn-add" style="width:100%;margin-top:8px;font-size:10px" onclick="openModal('rdv')">＋ Nouveau RDV</button>
+    </div>
+
+    <div class="ss">
+      <div class="st">Config Webhook</div>
+      <div class="form-group">
+        <label class="form-label">URL Webhook Discord</label>
+        <input class="form-input" id="wh-url" type="text" placeholder="https://discord.com/api/webhooks/…">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message ID (pour éditer)</label>
+        <input class="form-input" id="wh-mid" type="text" placeholder="ID du message Discord">
+      </div>
+      <button class="hbtn hbtn-sync" style="width:100%;font-size:10px;margin-top:2px" onclick="saveCfg()">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="moverlay" onclick="closeMOut(event)">
+  <div class="modal" id="mcontent"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+let factions = JSON.parse(localStorage.getItem('los_factions') || 'null') || [
+  {id:1,name:"Oryon",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:2,name:"Omega",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:3,name:"Angels of the Death",status:"allié",note:"En ligne",rdv:false,traque:false,tags:["actif"]},
+  {id:4,name:"Black berret",status:"neutre",note:"",rdv:true,traque:false,tags:[]},
+  {id:5,name:"Black Forrest",status:"allié",note:"",rdv:false,traque:false,tags:["check"]},
+  {id:6,name:"Draugar",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:7,name:"Epsylon",status:"allié",note:"",rdv:false,traque:false,tags:["check"]},
+  {id:8,name:"Blackjack",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:9,name:"Brotherhood",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:10,name:"404",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:11,name:"Guardian",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:12,name:"Grimward",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:13,name:"Santa muerte",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:14,name:"Shadow Force",status:"hostile",note:"Traque active",rdv:false,traque:true,tags:[]},
+  {id:15,name:"Sheriff GnD",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:16,name:"Orca",status:"neutre",note:"Radio 111 — 16/17 pers. 8 actifs",rdv:false,traque:false,tags:[]},
+  {id:17,name:"Tokers Family",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:18,name:"Runner",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:19,name:"Sinner",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:20,name:"Z-egpa",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:21,name:"La Horde",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:22,name:"The IronR",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:23,name:"C-Block",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:24,name:"Raven",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:25,name:"Gorillas",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:26,name:"The Ghost",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:27,name:"CMS",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:28,name:"Les SAM",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:29,name:"MMP",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:30,name:"Les Racines du Coeur",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:31,name:"La coalition",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:32,name:"Los Diablos",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:33,name:"Les vagabonds",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:34,name:"Blackligne",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:35,name:"The Lost",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:36,name:"Les Veilleurs",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+  {id:37,name:"6block",status:"neutre",note:"",rdv:false,traque:false,tags:[]},
+];
+let rdvList = JSON.parse(localStorage.getItem('los_rdv') || '[]');
+let cfg = JSON.parse(localStorage.getItem('los_cfg') || '{}');
+cfg.webhook = cfg.webhook || 'https://discord.com/api/webhooks/1483194376644595990/hjv7mE_0lkhs_ANVItTY4rZAgpX4t4zYCwEWRXxbw8RpxgE7LIbjly1mo6bSxNmVr2R6';
+cfg.mid = cfg.mid || '';
+let curFilter='all', srch='', editId=null;
+
+function save(){localStorage.setItem('los_factions',JSON.stringify(factions));localStorage.setItem('los_rdv',JSON.stringify(rdvList));}
+function saveCfg(){cfg.webhook=document.getElementById('wh-url').value.trim()||cfg.webhook;cfg.mid=document.getElementById('wh-mid').value.trim();localStorage.setItem('los_cfg',JSON.stringify(cfg));toast('Config sauvegardée ✦','ok');}
+
+function buildMsg(){
+  const lines=['# DIPLOMATIE','—> Los Ombras',''];
+  factions.forEach(f=>{
+    let l='- ';
+    const bold=f.status==='allié'||f.tags.includes('actif');
+    l+=bold?'**'+f.name+'**':f.name;
+    if(f.rdv)l+=' —> RDV';
+    if(f.traque)l+=' —> Traque ❌';
+    if(f.tags.includes('check')&&!f.traque)l+=' ✅';
+    if(f.tags.includes('actif')&&!f.rdv&&!f.traque)l+=' 🟢';
+    if(f.note&&!f.rdv&&!f.traque)l+=' — '+f.note;
+    lines.push(l);
+  });
+  return lines.join('
+');
+}
+
+async function syncDiscord(){
+  const url=cfg.webhook||document.getElementById('wh-url').value.trim();
+  if(!url){toast('Configure le webhook !','err');return;}
+  const content=buildMsg();
+  try{
+    let res;
+    if(cfg.mid){
+      res=await fetch(url+'/messages/'+cfg.mid,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
+    }else{
+      res=await fetch(url+'?wait=true',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content})});
+      if(res.ok){const d=await res.json();cfg.mid=d.id;document.getElementById('wh-mid').value=d.id;localStorage.setItem('los_cfg',JSON.stringify(cfg));}
+    }
+    if(res.ok){toast('✅ Discord synchronisé !','ok');}
+    else{const t=await res.text();toast('Erreur '+res.status+': '+JSON.parse(t).message,'err');}
+  }catch(e){toast('Erreur: '+e.message,'err');}
+}
+
+function render(){
+  document.getElementById('c-a').textContent=factions.filter(f=>f.status==='allié').length;
+  document.getElementById('c-n').textContent=factions.filter(f=>f.status==='neutre').length;
+  document.getElementById('c-h').textContent=factions.filter(f=>f.status==='hostile').length;
+  document.getElementById('c-r').textContent=factions.filter(f=>f.rdv).length+rdvList.length;
+  document.getElementById('fcount').textContent=factions.length;
+  let list=[...factions];
+  if(curFilter==='rdv')list=list.filter(f=>f.rdv);
+  else if(curFilter==='traque')list=list.filter(f=>f.traque);
+  else if(curFilter!=='all')list=list.filter(f=>f.status===curFilter);
+  if(srch)list=list.filter(f=>f.name.toLowerCase().includes(srch)||(f.note||'').toLowerCase().includes(srch));
+  list.sort((a,b)=>{if(a.traque&&!b.traque)return -1;if(!a.traque&&b.traque)return 1;const o={hostile:0,allié:1,neutre:2};return(o[a.status]??3)-(o[b.status]??3);});
+  document.getElementById('flist').innerHTML=list.length?list.map(fc).join(''):'<div style="color:var(--muted);font-size:12px;text-align:center;padding:24px">Aucune faction</div>';
+  document.getElementById('dp-prev').textContent=buildMsg();
+  renderRDV();
+  document.getElementById('wh-url').value=cfg.webhook||'';
+  document.getElementById('wh-mid').value=cfg.mid||'';
+  const n=new Date();
+  document.getElementById('dpt').textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');
+}
+
+function fc(f){
+  const sc=f.traque?'traque':f.status;
+  const bs=f.traque?'<span class="badge bt">🔴 TRAQUE</span>':f.status==='allié'?'<span class="badge ba">✅ Allié</span>':f.status==='hostile'?'<span class="badge bh">⚔ Hostile</span>':'';
+  const br=f.rdv?'<span class="badge br">📅 RDV</span>':'';
+  const bch=f.tags.includes('check')?'<span class="badge bch">✓</span>':'';
+  const note=f.note?'<div class="fc-note">→ '+f.note+'</div>':'';
+  return '<div class="fcard '+sc+'">'
+    +'<div class="fc-top"><div class="fc-name">'+f.name+'</div><div class="fc-badges">'+bch+bs+br+'</div></div>'
+    +note
+    +'<div class="fc-acts">'
+    +'<button class="fca fca-e" onclick="event.stopPropagation();openModal('edit','+f.id+')">✏ Modifier</button>'
+    +'<button class="fca fca-d" onclick="event.stopPropagation();delF('+f.id+')">✕ Suppr.</button>'
+    +'</div></div>';
+}
+
+function renderRDV(){
+  const all=[...factions.filter(f=>f.rdv).map(f=>({id:'f'+f.id,label:f.name+' — RDV à planifier'})),...rdvList.map(r=>({id:'r'+r.id,label:r.label}))];
+  document.getElementById('rdv-list').innerHTML=all.length?all.map(r=>'<div class="rdv-item"><div class="rdv-dot"></div><span>'+r.label+'</span><button class="rdv-del" onclick="delRDV(''+r.id+'')">✕</button></div>').join(''):'<div style="font-size:11px;color:var(--muted)">Aucun RDV</div>';
+}
+
+function setF(f,btn){curFilter=f;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+function filterF(q){srch=q.toLowerCase();render();}
+function delF(id){if(!confirm('Supprimer cette faction ?'))return;factions=factions.filter(f=>f.id!==id);save();render();toast('Faction supprimée','ok');}
+function delRDV(id){if(id.startsWith('f')){const f=factions.find(x=>x.id===parseInt(id.slice(1)));if(f)f.rdv=false;}else{rdvList=rdvList.filter(r=>'r'+r.id!==id);}save();render();}
+
+function saveFaction(e){
+  e.preventDefault();
+  const name=document.getElementById('f-name').value.trim();
+  const status=document.getElementById('f-status').value;
+  const note=document.getElementById('f-note').value.trim();
+  const rdv=document.getElementById('f-rdv').checked;
+  const traque=document.getElementById('f-traque').checked;
+  const tags=[];
+  if(document.getElementById('f-check').checked)tags.push('check');
+  if(document.getElementById('f-actif').checked)tags.push('actif');
+  if(!name)return;
+  if(editId){const f=factions.find(x=>x.id===editId);if(f)Object.assign(f,{name,status,note,rdv,traque,tags});}
+  else factions.push({id:Date.now(),name,status,note,rdv,traque,tags});
+  save();render();closeModal();
+  toast(editId?'✏ Faction modifiée':'✅ Faction ajoutée','ok');
+}
+
+function saveRDV(e){
+  e.preventDefault();
+  const label=document.getElementById('rdv-label').value.trim();
+  const fid=document.getElementById('rdv-fac').value;
+  if(!label)return;
+  if(fid){const f=factions.find(x=>x.id===parseInt(fid));if(f)f.rdv=true;}
+  else rdvList.push({id:Date.now(),label});
+  save();render();closeModal();toast('📅 RDV ajouté','ok');
+}
+
+function openModal(type,id){
+  editId=null;
+  let f={};
+  if(type==='edit'&&id){f=factions.find(x=>x.id===id)||{};editId=id;}
+  const mc=document.getElementById('mcontent');
+  if(type==='add'||type==='edit'){
+    mc.innerHTML='<div class="modal-title"><span>'+(type==='edit'?'✏':'✚')+'</span>'+(type==='edit'?'Modifier':'Ajouter')+' une faction</div>'
+    +'<form onsubmit="saveFaction(event)">'
+    +'<div class="form-row">'
+    +'<div class="form-group"><label class="form-label">Nom</label><input class="form-input" id="f-name" value="'+(f.name||'')+'" required autofocus placeholder="Nom de la faction…"></div>'
+    +'<div class="form-group"><label class="form-label">Statut</label><select class="form-select" id="f-status">'
+    +'<option value="neutre"'+(f.status==='neutre'?' selected':'')+'>🤝 Neutre</option>'
+    +'<option value="allié"'+(f.status==='allié'?' selected':'')+'>✅ Allié</option>'
+    +'<option value="hostile"'+(f.status==='hostile'?' selected':'')+'>⚔ Hostile</option>'
+    +'</select></div></div>'
+    +'<div class="form-group"><label class="form-label">Note / Info</label><input class="form-input" id="f-note" value="'+(f.note||'')+'" placeholder="Info, radio, membres…"></div>'
+    +'<div class="chks">'
+    +'<label class="chk-label"><input type="checkbox" id="f-rdv"'+(f.rdv?' checked':'')+'>📅 RDV planifié</label>'
+    +'<label class="chk-label"><input type="checkbox" id="f-traque"'+(f.traque?' checked':'')+'>🔴 En traque</label>'
+    +'<label class="chk-label"><input type="checkbox" id="f-check"'+(f.tags&&f.tags.includes('check')?' checked':'')+'>✅ Entente confirmée</label>'
+    +'<label class="chk-label"><input type="checkbox" id="f-actif"'+(f.tags&&f.tags.includes('actif')?' checked':'')+'>🟢 Actif en ligne</label>'
+    +'</div>'
+    +'<div class="modal-actions"><button type="button" class="mbtn mb-cancel" onclick="closeModal()">Annuler</button><button type="submit" class="mbtn mb-save">'+(type==='edit'?'Sauvegarder':'Ajouter')+'</button></div>'
+    +'</form>';
+  } else if(type==='rdv'){
+    mc.innerHTML='<div class="modal-title"><span>📅</span>Nouveau RDV</div>'
+    +'<form onsubmit="saveRDV(event)">'
+    +'<div class="form-group"><label class="form-label">Description</label><input class="form-input" id="rdv-label" required autofocus placeholder="Ex: Réunion avec Black berret — 20h"></div>'
+    +'<div class="form-group"><label class="form-label">Faction (optionnel)</label><select class="form-select" id="rdv-fac"><option value="">— Général —</option>'+factions.map(f=>'<option value="'+f.id+'">'+f.name+'</option>').join('')+'</select></div>'
+    +'<div class="modal-actions"><button type="button" class="mbtn mb-cancel" onclick="closeModal()">Annuler</button><button type="submit" class="mbtn mb-save">Ajouter</button></div>'
+    +'</form>';
+  }
+  document.getElementById('moverlay').classList.add('open');
+}
+
+function closeModal(){document.getElementById('moverlay').classList.remove('open');editId=null;}
+function closeMOut(e){if(e.target===document.getElementById('moverlay'))closeModal();}
+
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='show '+(type||'');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.className='',2800);
+}
+
+render();
+setInterval(()=>{const n=new Date();document.getElementById('dpt').textContent=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');},30000);
+</script>
+</body>
+</html>
